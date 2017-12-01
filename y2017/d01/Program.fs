@@ -1,8 +1,9 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
+open Day01
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+    let puzzleInput = System.IO.File.ReadAllText "puzzle-input-1"
+    let solution = captcha puzzleInput
+    printfn "%d" solution
+    0
