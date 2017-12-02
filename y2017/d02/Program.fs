@@ -1,4 +1,9 @@
-﻿[<EntryPoint>]
+﻿open System.IO
+
+open Day02
+
+[<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+    let puzzleInput1 = File.ReadAllLines "puzzle-input-1"
+    checksum1 puzzleInput1 |> printf "%d"
+    0
