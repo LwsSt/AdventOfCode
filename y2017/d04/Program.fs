@@ -9,5 +9,10 @@ let main argv =
         puzzleInput
         |> Seq.filter isValid
         |> Seq.length
-    printfn "Part 1: %d" solutionPart1    
+    let solutionPart2 =
+        puzzleInput
+        |> Seq.filter isValid2
+        |> Seq.length    
+    printfn "Part 1: %d" solutionPart1
+    printfn "Part 2: %d" solutionPart2
     0
