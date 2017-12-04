@@ -6,12 +6,12 @@ open Xunit
 
 [<Fact>]
 let ``[Part 1] "aa bb cc dd ee" is a valid passphrase`` ()=
-    isValid "aa bb cc dd ee" |> should equal true
+    isValid "aa bb cc dd ee" |> should be True
 
 [<Fact>]
 let ``[Part 1] "aa bb cc dd ee aa" is not a valid passphrase`` ()=
-    isValid "aa bb cc dd ee" |> should equal false
+    isValid "aa bb cc dd ee" |> should be False
    
 [<Fact>]
 let ``[Part 1] "aa bb cc dd aaa" is a valid passphrase`` ()=
-    isValid "aa bb cc dd aaa" |> should equal true
+    isValid "aa bb cc dd aaa" |> should be True
