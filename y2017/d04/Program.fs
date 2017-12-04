@@ -11,7 +11,7 @@ let main argv =
         |> Seq.length
     let solutionPart2 =
         puzzleInput
-        |> Seq.filter isValid2
+        |> Seq.filter (fun x -> isValid x && isValid2 x)
         |> Seq.length    
     printfn "Part 1: %d" solutionPart1
     printfn "Part 2: %d" solutionPart2
