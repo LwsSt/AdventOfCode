@@ -5,3 +5,5 @@ let isValid (str: string): bool =
     let wordCount = words.Length
     let distinctWordCount = words |> Array.distinct |> Array.length
     wordCount = distinctWordCount
+
+let isValid2 (str: string) : bool = failwith "Implement"
