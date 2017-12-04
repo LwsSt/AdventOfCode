@@ -1,8 +1,13 @@
-﻿// Learn more about F# at http://fsharp.org
+﻿open System.IO
 
-open System
+open Day04
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+    let puzzleInput = File.ReadAllLines "puzzle-input"
+    let solutionPart1 =
+        puzzleInput
+        |> Seq.filter isValid
+        |> Seq.length
+    printfn "Part 1: %d" solutionPart1    
+    0
