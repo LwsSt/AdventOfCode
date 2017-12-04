@@ -35,3 +35,7 @@ let ``[Part 2] "iiii oiii ooii oooi oooo" is a valid passphrase`` ()=
 [<Fact>]
 let ``[Part 2] "oiii ioii iioi iiio" is not a valid passphrase`` ()=
     isValid2 "oiii ioii iioi iiio" |> should be False
+
+[<Fact>]
+let ``abcde is an anagram of ecdab`` ()=
+    isAnagram ("abcde", "ecdab") |> should be True
