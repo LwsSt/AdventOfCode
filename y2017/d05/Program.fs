@@ -9,7 +9,12 @@ let main argv =
     let instructions = 
         puzzleInput
         |> Seq.map int
-        |> Seq.toArray
-    escape instructions |> printfn "Part 1: %d"
-    escape2 instructions |> printfn "Part 2: %d"
+    instructions
+    |> Seq.toArray
+    |> escape  
+    |> printfn "Part 1: %d"
+    instructions
+    |> Seq.toArray
+    |> escape2
+    |> printfn "Part 2: %d"
     0 // return an integer exit code
