@@ -32,4 +32,4 @@ module Tests =
 
     [<Fact>]
     let ``[Part 2] Example input takes 10 steps`` ()=
-        escape2 [|2; 3; 2; 3; -1|]
+        escape2 [|0; 3; 0; 1; -3|] |> should equal 10
