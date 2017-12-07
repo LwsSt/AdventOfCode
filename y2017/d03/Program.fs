@@ -1,8 +1,7 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open Day03
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello, World!"
-    0 // return an integer exit code
+    memory 368078
+    |> printfn "Part 1: %d"
+    0
