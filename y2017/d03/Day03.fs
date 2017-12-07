@@ -23,11 +23,23 @@ let traverseSides sideLength n =
     |> Seq.take n
     |> Seq.fold (>>) id
 
-let memory (data :int) :int =
-    let largestSquare = oddSquares |> Seq.skipWhile (fun x -> x <= data) |> Seq.head
+let getCoordForPosition pos = 
+    let largestSquare = oddSquares |> Seq.skipWhile (fun x -> x <= pos) |> Seq.head
     let side = (sqrt (float largestSquare) |> int) - 1
     let coords = (side / 2, side / 2 * -1)
-    let difference = largestSquare - data
+    let difference = largestSquare - pos
     coords
     |> traverseSides side difference
+
+let memory (data :int) :int =
+    getCoordForPosition data
     |> fun (x, y) -> (abs x) + (abs y)
+
+let generate: int seq = 
+    let rec generateImpl map idx =
+        seq {
+            let coords = getCoordForPosition idx
+
+            yield! generateImpl map (idx + 1)
+        }
+    generateImpl ([((0, 0), 1)] |> Map.ofSeq) 2
