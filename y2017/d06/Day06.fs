@@ -14,12 +14,23 @@ let cycle (input: int list): int list =
     |> List.ofArray
 
 let escape (input: int list): int =
-    let rec escapeImpl coll count alloc =
+    let rec escapeImpl coll alloc =
         let nextCycle = cycle alloc
         match List.contains nextCycle coll with
-        | true -> count + 1
-        | false -> escapeImpl (nextCycle :: coll) (count + 1) nextCycle
-    escapeImpl [] 0 input
+        | true -> List.length coll
+        | false -> escapeImpl (nextCycle :: coll) nextCycle
+    escapeImpl [input] input
+
+let escape2 (input: int list): int =
+    let rec escapeImpl coll alloc =
+        let nextCycle = cycle alloc
+        match List.contains nextCycle coll with
+        | true -> (nextCycle, coll)
+        | false -> escapeImpl (nextCycle :: coll) nextCycle
+    let (lastAlloc, _) = escapeImpl [input] input
+    escapeImpl [lastAlloc] lastAlloc
+    |> snd
+    |> List.length
 
 module Test = 
 
@@ -29,6 +40,9 @@ module Test =
     [<Fact>]
     let ``[Part 1] {0, 2, 7, 0} returns 5 cycles`` ()=
         escape [0; 2; 7; 0] |> should equal 5
+
+    let ``[Part 2] {0, 2, 7, 0} returns 4 cycles`` ()=
+        escape2 [0; 2; 7; 0] |> should equal 4    
 
     [<Fact>]
     let ``[Part 1] {0, 2, 7, 0} cycles to {2, 4, 1, 2}`` ()=

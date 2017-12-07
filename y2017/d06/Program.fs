@@ -10,4 +10,9 @@ let main argv =
     |> Array.toList
     |> escape
     |> printfn "Part 1: %d"
+    puzzleInput.Split [|'\t'|]
+    |> Array.map int
+    |> Array.toList
+    |> escape2
+    |> printfn "Part 2: %d"
     0 // return an integer exit code
