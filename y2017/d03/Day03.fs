@@ -35,11 +35,28 @@ let memory (data :int) :int =
     getCoordForPosition data
     |> fun (x, y) -> (abs x) + (abs y)
 
+let sum (map: Map<(int * int), int>) (x, y) =
+    let square = [
+            (x - 1, y + 1); (x, y + 1); (x + 1,y + 1);
+            (x - 1, y);     (x, y);     (x + 1, y);
+            (x - 1, y - 1); (x, y - 1); (x + 1, y - 1)
+        ]
+    square
+    |> List.map (fun c -> Map.tryFind c map)
+    |> List.choose id
+    |> List.sum
+
 let generate: int seq = 
     let rec generateImpl map idx =
         seq {
             let coords = getCoordForPosition idx
-
-            yield! generateImpl map (idx + 1)
+            let value = sum map coords
+            yield value
+            yield! generateImpl (Map.add coords value map) (idx + 1)
         }
     generateImpl ([((0, 0), 1)] |> Map.ofSeq) 2
+
+let memory2 (data: int): int =
+    generate
+    |> Seq.skipWhile (fun x -> x < data)
+    |> Seq.head
