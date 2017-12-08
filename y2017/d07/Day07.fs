@@ -28,4 +28,15 @@ let parseLine (str: string): ProgramInfo =
     | Failure (err, _, _) -> failwith err
 
 
-let towers (str: string list): string = failwith "Implement"
+let towers (strs: string list): string =
+    let infos = Seq.map parseLine strs
+    let mapper {name= n; weight= w; programs= ps} =
+        match ps with
+        | [] -> (n, Leaf (n, w))
+        | p -> (n, Node (n, w, []))
+    let trees = infos |> Seq.map mapper
+    let leafProgs = 
+        (Seq.collect (fun {programs=p} -> p) infos)
+        |> Set.ofSeq
+    let root = infos |> Seq.filter (fun {name=n} -> Set.contains n leafProgs |> not) |> Seq.head
+    root.name
