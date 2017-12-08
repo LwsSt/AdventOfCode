@@ -31,3 +31,7 @@ let ``[Part 1] 23 returns 2 steps`` ()=
 [<Fact>]
 let ``[Part 1] 1024 returns 31 steps`` ()=
     memory 1024 |> should equal 31
+
+[<Fact>]
+let ``[Part 2] Coordinates for 9 equals (1, -1)`` ()=
+    getCoordForPosition 9 |> should equal (1, -1)
