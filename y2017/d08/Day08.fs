@@ -56,10 +56,10 @@ let parseLine (str: string): Instruction =
         p5 >>= fun e -> 
         p6 >>= fun f -> preturn (g a b c d e f)
     let parseCondition =
-        stringReturn "<" LT <|>
-        stringReturn "<=" LTE <|>
-        stringReturn ">" GT <|>
         stringReturn ">=" GTE <|>
+        stringReturn "<=" LTE <|>
+        stringReturn "<" LT <|>
+        stringReturn ">" GT <|>
         stringReturn "==" EQ <|>
         stringReturn "!=" NEQ
     let register = manyChars letter
