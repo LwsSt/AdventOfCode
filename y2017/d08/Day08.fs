@@ -78,6 +78,16 @@ let runRegisters (lines: string list): int =
     |> Seq.map snd
     |> Seq.max
 
+let runRegisters2 (lines: string list): int =
+    let folder (regs: Map<string, int>, totalMax: int) (instr: Instruction): Map<string, int> * int = 
+        let newRegisters = evalInstruction regs instr
+        let newRegsMax = newRegisters |> Map.toSeq |> Seq.map snd |> Seq.max
+        (newRegisters, (max totalMax newRegsMax))
+    lines
+    |> Seq.map parseLine
+    |> Seq.fold folder (Map.empty, 0)
+    |> snd
+
 module Tests =
 
     open FsUnit
@@ -93,6 +103,10 @@ module Tests =
     [<Fact>]
     let ``[Part 1] Test input returns correct result`` ()=
         runRegisters testInput |> should equal 1
+
+    [<Fact>]
+    let ``[Part 2] Test input returns correct result`` ()=
+        runRegisters2 testInput |> should equal 10
 
     [<Fact>]
     let ``Parse line returns expected value`` ()=
