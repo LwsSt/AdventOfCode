@@ -26,7 +26,8 @@ let ``[Part 1] Test input returns tknk`` ()=
 
 [<Fact>]
 let ``Parse 'pbga (66)' returns correct value`` ()=
-    parseLine "pbga (66)" |> should equal <| {name="pbga"; weight=66; programs=[]]}
+    parseLine "pbga (66)" |> should equal <| {name="pbga"; weight=66; programs=[]}
 
+[<Fact>]
 let ``Parse 'fwft (72) -> ktlj, cntj, xhth' returns correct value`` ()=
     parseLine "fwft (72) -> ktlj, cntj, xhth" |> should equal <| {name= "fwft"; weight= 72; programs= ["ktlj"; "cntj"; "xhth"]}
