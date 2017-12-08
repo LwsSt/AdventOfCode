@@ -20,7 +20,7 @@ let testInput = [
     "cntj (57)"
 ]
 
-[<Fact(Skip = "Not implemented")>]
+[<Fact>]
 let ``[Part 1] Test input returns tknk`` ()=
     towers testInput |> should equal "tknk"
 
