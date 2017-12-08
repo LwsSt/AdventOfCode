@@ -24,7 +24,7 @@ let traverseSides sideLength n =
     |> Seq.fold (>>) id
 
 let getCoordForPosition pos = 
-    let largestSquare = oddSquares |> Seq.skipWhile (fun x -> x <= pos) |> Seq.head
+    let largestSquare = oddSquares |> Seq.skipWhile (fun x -> x < pos) |> Seq.head
     let side = (sqrt (float largestSquare) |> int) - 1
     let coords = (side / 2, side / 2 * -1)
     let difference = largestSquare - pos
@@ -54,7 +54,8 @@ let generate: int seq =
             yield value
             yield! generateImpl (Map.add coords value map) (idx + 1)
         }
-    generateImpl ([((0, 0), 1)] |> Map.ofSeq) 2
+    let initialMap = [((0, 0), 1)] |> Map.ofSeq
+    generateImpl initialMap 2
 
 let memory2 (data: int): int =
     generate
