@@ -1,6 +1,19 @@
 module Day09
 
-let score (input: string): int = failwith "Implement"
+let score (input: string): int =
+    let rec scoreImpl (str: char list) (score: int) (acc: int) =
+        match str with
+        | [] -> acc
+        | '{'::tail -> scoreImpl tail (score + 1) (acc)
+        | '<'::tail -> ignoreGarbage tail score acc
+        | '}'::tail -> scoreImpl tail (score - 1) (acc + score)
+        | ','::tail -> scoreImpl tail score acc
+    and ignoreGarbage (str: char list) (score: int) (acc: int) =
+        match str with 
+        | '>'::tail -> scoreImpl tail score acc
+        | '!'::tail -> ignoreGarbage (List.tail tail) score acc
+        | _::tail -> ignoreGarbage tail score acc
+    scoreImpl (input |> Seq.toList) 0 0
 
 module Tests =
     open FsUnit
@@ -35,5 +48,5 @@ module Tests =
         score "{{<!!>},{<!!>},{<!!>},{<!!>}}" |> should equal 9
 
     [<Fact>]
-    let ``[Part 1] {{<a!>},{<a!>},{<a!>},{<ab>}} scores 2`` ()=
-        score "{{<a!>},{<a!>},{<a!>},{<ab>}}" |> should equal 2    
+    let ``[Part 1] {{<a!>},{<a!>},{<a!>},{<ab>}} scores 3`` ()=
+        score "{{<a!>},{<a!>},{<a!>},{<ab>}}" |> should equal 3
