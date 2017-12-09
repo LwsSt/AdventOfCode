@@ -20,9 +20,25 @@ let testInput = [
     "cntj (57)"
 ]
 
+let testTower = 
+    Node ("tknk", 41, 
+        [
+        Node ("ugml", 68, [Leaf ("gyxo", 61); Leaf ("ebii", 61); Leaf ("jptl", 61)])
+        Node ("padx", 45, [Leaf ("pbga", 66); Leaf ("havc", 66); Leaf ("qoyq", 66)])
+        Node ("fwft", 72, [Leaf ("ktlj", 57); Leaf ("cntj", 57); Leaf ("xhth", 57)])
+        ])
+
 [<Fact>]
 let ``[Part 1] Test input returns tknk`` ()=
     towers testInput |> should equal "tknk"
+
+
+let ``[Part 2] Test input returns 60`` ()=
+    balanceTower testInput |> should equal 60
+
+[<Fact>]
+let ``Test input creates correct tower`` ()=
+    constructTower testInput |> should equal testTower
 
 [<Fact>]
 let ``Parse 'pbga (66)' returns correct value`` ()=
