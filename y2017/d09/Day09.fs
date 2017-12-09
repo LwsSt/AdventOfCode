@@ -1,21 +1,21 @@
 module Day09
 
-let score (input: string): int =
-    let rec scoreImpl (str: char list) (score: int) (acc: int) =
+let rec scoreImpl (str: char list) (score: int) (acc: int) (garbage: int) =
         match str with
-        | [] -> acc
-        | '{'::tail -> scoreImpl tail (score + 1) (acc)
-        | '<'::tail -> ignoreGarbage tail score acc
-        | '}'::tail -> scoreImpl tail (score - 1) (acc + score)
-        | ','::tail -> scoreImpl tail score acc
-    and ignoreGarbage (str: char list) (score: int) (acc: int) =
+        | [] -> (acc, garbage)
+        | '{'::tail -> scoreImpl tail (score + 1) (acc) garbage
+        | '<'::tail -> ignoreGarbage tail score acc garbage
+        | '}'::tail -> scoreImpl tail (score - 1) (acc + score) garbage
+        | ','::tail -> scoreImpl tail score acc garbage
+    and ignoreGarbage (str: char list) (score: int) (acc: int) (garbage: int)=
         match str with 
-        | '>'::tail -> scoreImpl tail score acc
-        | '!'::tail -> ignoreGarbage (List.tail tail) score acc
-        | _::tail -> ignoreGarbage tail score acc
-    scoreImpl (input |> Seq.toList) 0 0
+        | '>'::tail -> scoreImpl tail score acc garbage
+        | '!'::tail -> ignoreGarbage (List.tail tail) score acc garbage
+        | _::tail -> ignoreGarbage tail score acc (garbage + 1)
 
-let score2 (input: string): int = failwith "Implement"
+let score (input: string): int = scoreImpl (input |> Seq.toList) 0 0 0 |> fst
+
+let score2 (input: string): int = scoreImpl (input |> Seq.toList) 0 0 0 |> snd
 
 module Tests =
     open FsUnit
