@@ -32,7 +32,7 @@ let testTower =
 let ``[Part 1] Test input returns tknk`` ()=
     towers testInput |> should equal "tknk"
 
-
+[<Fact>]
 let ``[Part 2] Test input returns 60`` ()=
     balanceTower testInput |> should equal 60
 
