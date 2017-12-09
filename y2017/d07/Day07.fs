@@ -27,16 +27,28 @@ let parseLine (str: string): ProgramInfo =
     | Success (info, _, _) -> info
     | Failure (err, _, _) -> failwith err
 
+let parseLines strs = Seq.map parseLine strs
+
+let rootNode infos = 
+    let leafProgs = 
+        infos
+        |> Seq.collect (fun {programs=p} -> p)
+        |> Set.ofSeq
+    infos
+    |> Seq.filter (fun {name=n} -> Set.contains n leafProgs |> not)
+    |> Seq.head
+
+let constructTower (strs: string list): Tree =
+    let infos = parseLines strs
+    let rec buildTower progs rootName =
+        let node = progs |> Seq.filter (fun {name=n} -> n = rootName) |> Seq.exactlyOne
+        match node.programs with
+        | [] -> Leaf (node.name, node.weight)
+        | ps -> Node (node.name, node.weight, List.map (fun x -> buildTower progs x) ps)
+    buildTower infos (rootNode infos).name
 
 let towers (strs: string list): string =
-    let infos = Seq.map parseLine strs
-    let mapper {name= n; weight= w; programs= ps} =
-        match ps with
-        | [] -> (n, Leaf (n, w))
-        | p -> (n, Node (n, w, []))
-    let trees = infos |> Seq.map mapper
-    let leafProgs = 
-        (Seq.collect (fun {programs=p} -> p) infos)
-        |> Set.ofSeq
-    let root = infos |> Seq.filter (fun {name=n} -> Set.contains n leafProgs |> not) |> Seq.head
-    root.name
+    let infos = parseLines strs
+    (rootNode infos).name
+
+let balanceTower (strs: string list): int = failwith "Implement"
