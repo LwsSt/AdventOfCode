@@ -15,6 +15,8 @@ let score (input: string): int =
         | _::tail -> ignoreGarbage tail score acc
     scoreImpl (input |> Seq.toList) 0 0
 
+let score2 (input: string): int = failwith "Implement"
+
 module Tests =
     open FsUnit
     open Xunit
@@ -50,3 +52,31 @@ module Tests =
     [<Fact>]
     let ``[Part 1] {{<a!>},{<a!>},{<a!>},{<ab>}} scores 3`` ()=
         score "{{<a!>},{<a!>},{<a!>},{<ab>}}" |> should equal 3
+
+    [<Fact>]
+    let ``[Part 2] <> has 0 garbage`` ()=
+        score2 "<>" |> should equal 0
+
+    [<Fact>]
+    let ``[Part 2] <random characters> has 17 garbage`` ()=
+        score2 "<random characters>" |> should equal 17
+
+    [<Fact>]
+    let ``[Part 2] <<<<> has 3 garbage`` ()=
+        score2 "<<<<>" |> should equal 3
+
+    [<Fact>]
+    let ``[Part 2] <{!>}> has 2`` ()=
+        score2 "<{!>}>" |> should equal 2
+      
+    [<Fact>]
+    let ``[Part 2] <!!> has 0 garbage`` ()=
+        score2 "<!!>" |> should equal 0
+
+    [<Fact>]
+    let ``[Part 2] <!!!>> has 0 garbage`` ()=
+        score2 "<!!!>>" |> should equal 0
+
+    [<Fact>]
+    let ``[Part 2] <{o"i!a,<{i<a> has 10 garbage`` ()=
+        score2 """<{o"i!a,<{i<a>""" |> should equal 10
