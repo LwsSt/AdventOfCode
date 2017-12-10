@@ -47,8 +47,16 @@ let constructTower (strs: string list): Tree =
         | ps -> Node (node.name, node.weight, List.map (fun x -> buildTower progs x) ps)
     buildTower infos (rootNode infos).name
 
+
+let rec weighTower = function
+    | Node(_, weight, ps) -> weight + (List.sumBy weighTower ps)
+    | Leaf(_, weight) -> weight
+        
+
 let towers (strs: string list): string =
     let infos = parseLines strs
     (rootNode infos).name
 
-let balanceTower (strs: string list): int = failwith "Implement"
+let balanceTower (strs: string list): int =
+    let tower = constructTower strs
+    0
