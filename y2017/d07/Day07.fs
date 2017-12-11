@@ -59,4 +59,22 @@ let towers (strs: string list): string =
 
 let balanceTower (strs: string list): int =
     let tower = constructTower strs
-    0
+    let rec balanceTowerImpl (tower: Tree) expectedWeight = 
+        match tower with
+        | Leaf (_) -> 0
+        | Node (_, _, ps) ->
+            let childWeights = ps |> List.map weighTower
+            match childWeights |> List.distinct |> List.length |> ((=) 1) with 
+            | true -> expectedWeight - (childWeights |> List.sum)
+            | false -> 
+                let towerWeights = ps |> List.groupBy weighTower
+                let unbalancedChild = 
+                    towerWeights
+                    |> List.filter (fun (_,ws) -> ws.Length = 1)
+                    |> List.head |> snd |> List.exactlyOne
+                let balancedChild =
+                    towerWeights
+                    |> List.filter (fun (_,ws) -> ws.Length > 1)
+                    |> List.head |> snd |> List.head
+                balanceTowerImpl unbalancedChild (weighTower balancedChild)
+    balanceTowerImpl tower (weighTower tower)
