@@ -19,7 +19,7 @@ let hash (lengths: int list) (input: int list): int =
     let rec hashImpl position skipSize (list: List<int>) lengths =
         match lengths with
         | [] -> list.[0] * list.[1]
-        | nxt::tail -> hashImpl (position + skipSize) (skipSize + 1) (cycle position nxt list) tail
+        | nxt::tail -> hashImpl (position + nxt + skipSize) (skipSize + 1) (cycle position nxt list) tail
     hashImpl 0 0 l lengths
 
 module Tests =
