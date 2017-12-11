@@ -6,4 +6,7 @@ let main argv =
     puzzleInput
     |> towers
     |> printfn "Part 1: %s"
+    puzzleInput
+    |> balanceTower
+    |> printfn "Part 2: %d"
     0
