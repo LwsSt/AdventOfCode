@@ -2,8 +2,8 @@
 
 [<EntryPoint>]
 let main argv =
-    let puzzleInput = [31; 2; 85; 1; 80; 109; 35; 63; 98; 255; 0; 13; 105; 254; 128; 33]
+    let puzzleInput1 = [31; 2; 85; 1; 80; 109; 35; 63; 98; 255; 0; 13; 105; 254; 128; 33]
     let input = Seq.init 256 id |> Seq.toList
-    hash puzzleInput input
+    hash1 puzzleInput1 input
     |> printfn "Part 1: %d"
     0

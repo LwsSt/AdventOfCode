@@ -13,14 +13,15 @@ let cycle position length (input: List<int>): List<int> =
         input.Insert(idx, subList.[i])
     input
 
+let rec hashRound position skipSize (list: List<int>) lengths =
+    match lengths with
+    | [] -> (list, position, skipSize)
+    | nxt::tail -> hashRound (position + nxt + skipSize) (skipSize + 1) (cycle position nxt list) tail
 
-let hash (lengths: int list) (input: int list): int =
+let hash1 (lengths: int list) (input: int list): int =
     let l = new List<int>(input)
-    let rec hashImpl position skipSize (list: List<int>) lengths =
-        match lengths with
-        | [] -> list.[0] * list.[1]
-        | nxt::tail -> hashImpl (position + nxt + skipSize) (skipSize + 1) (cycle position nxt list) tail
-    hashImpl 0 0 l lengths
+    let (outList, _, _) = hashRound 0 0 l lengths
+    outList.[0] * outList.[1]
 
 module Tests =
 
@@ -32,7 +33,7 @@ module Tests =
 
     [<Fact>]
     let ``Test input produces 12`` ()=
-        hash [3; 4; 1; 5] testList |> should equal 12
+        hash1 [3; 4; 1; 5] testList |> should equal 12
 
     [<Fact>]
     let ``0, 1, 2, 3, 4 cycles to 2 1 0 3 4`` ()=
