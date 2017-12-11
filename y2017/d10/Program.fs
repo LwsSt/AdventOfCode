@@ -1,8 +1,9 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open Day10
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+    let puzzleInput = [31; 2; 85; 1; 80; 109; 35; 63; 98; 255; 0; 13; 105; 254; 128; 33]
+    let input = Seq.init 256 id |> Seq.toList
+    hash puzzleInput input
+    |> printfn "Part 1: %d"
+    0
