@@ -14,7 +14,14 @@ let parse line =
     | Failure (err, _, _) -> failwith err
 
 
-let plumb (input: string list): int = failwith "Implement"
+let plumb (input: string seq): int = 
+    input
+    |> Seq.collect parse
+    |> Seq.fold (fun (acc: Set<int>) (p: int * int) ->
+        match (acc |> Set.contains (fst p) || acc |> Set.contains (snd p)) with 
+            | true -> acc |> Set.add (fst p) |> Set.add (snd p)
+            | false -> acc) (Set.singleton 0)
+    |> Set.count
 
 module Tests = 
     
@@ -31,7 +38,7 @@ module Tests =
         "6 <-> 4, 5"
     ]
 
-    [<Fact(Skip = "Not implemented")>]
+    [<Fact>]
     let ``Test input returns 6 programs`` ()=
         plumb testInput |> should equal 6
 
