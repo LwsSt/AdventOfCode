@@ -24,6 +24,8 @@ let cubeDistance (x1, y1, z1) (x2, y2, z2)=
     let dz = abs (z1 - z2)
     max dx dy |> max dz
 
+let distanceFromOrigin = cubeDistance (0, 0, 0)
+
 let traverse (moves: string seq): int = 
     let moveFunc = 
         moves
@@ -32,6 +34,19 @@ let traverse (moves: string seq): int =
     moveFunc (0, 0)
     |> toCube
     |> cubeDistance (0, 0, 0)
+
+let traverse2 (moves: string list): int =
+    let movefs = moves |> List.map parse
+    let rec traverseImpl fs results prev =
+        match fs with
+        | [] -> results
+        | f::gs -> 
+            let next = f prev
+            traverseImpl gs (next::results) next
+    let rs = traverseImpl movefs [] (0, 0)
+    rs
+    |> List.map (toCube >> distanceFromOrigin)
+    |> List.max
 
 module Tests = 
 
