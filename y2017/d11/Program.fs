@@ -6,4 +6,8 @@ let main argv =
     puzzleInput.Split [|','|]
     |> traverse
     |> printfn "Part 1: %d"
+    puzzleInput.Split [|','|] 
+    |> List.ofArray
+    |> traverse2
+    |> printfn "Part 2: %d"
     0
