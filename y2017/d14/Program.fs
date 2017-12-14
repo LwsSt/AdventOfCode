@@ -1,8 +1,7 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open Day14
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+    defrag "uugsqrei"
+    |> printfn "Part 1: %d"
+    0
