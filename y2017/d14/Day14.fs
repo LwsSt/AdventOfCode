@@ -30,12 +30,52 @@ let hexToBinary (str: string) =
 
 let genRows str = Seq.init 128 (fun n -> sprintf "%s-%d" str n) |> Seq.toList
 
-let defrag (str: string): int = 
+let makeMemGrid str = 
     str
     |> genRows
     |> Seq.map (hash >> hexToBinary)
+
+let defrag (str: string): int = 
+    str
+    |> makeMemGrid
     |> Seq.collect (fun s -> s |> Seq.filter ((=) '1'))
     |> Seq.length
+
+let get (x, y) (grid: int list list) = 
+    match List.tryItem x grid with
+    | Some ys -> 
+        match List.tryItem y ys with
+        | Some num -> num
+        | None -> 0
+    | None -> 0    
+
+let neighbours (x, y) = [
+        (x - 1, y + 1); (x, y + 1); (x + 1, y + 1)
+        (x - 1, y); (x + 1, y);
+        (x - 1, y - 1); (x, y - 1); (x + 1, y - 1)
+    ]
+
+let coords = 
+    Seq.init 128 (fun x -> Seq.init 128 (fun y -> x, y)) 
+    |> Seq.concat 
+    |> Seq.toList
+
+let regions (str: string): int = 
+    let rec mark coord grid visited = 
+        
+    let rec scan coords grid visited regions =
+        match grid with
+        | [] -> regions
+        | ((x, y) as c)::cs when not <| Set.contains c coords -> 0
+        | c::cs -> scan cs grid visited regions
+
+    let memGrid = 
+        str
+        |> makeMemGrid
+        |> Seq.map (fun s -> s |> Seq.map int |> Seq.toList)
+        |> Seq.toList
+    let i = memGrid.[0]
+    0
 
 module Tests = 
     open FsUnit
@@ -44,3 +84,6 @@ module Tests =
     [<Fact>]
     let ``flqrgnkx has 8108 used square`` ()=
         defrag "flqrgnkx" |> should equal 8108
+
+    let ``flqrgnkx has 1242 regions`` ()=
+        regions "flqrgnkx" |> should equal 1242
