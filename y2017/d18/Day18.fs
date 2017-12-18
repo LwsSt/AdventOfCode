@@ -32,8 +32,38 @@ let parse (str: string): Instruction =
     | Success (r, _, _) -> r
     | Failure (err, _, _) -> failwith err
 
+let tryFindOrDefault (key: 'T) (map: Map<'T, int>) =
+    match map |> Map.tryFind key with
+    | Some x -> x
+    | None -> 0
 
-let run (program: string list): int = failwith "Implement"
+let tryRead arg regs = 
+    match arg with
+    | Number n -> n
+    | Register a -> tryFindOrDefault a regs
+
+let run (program: string list): int = 
+    let instructions = program |> List.map parse
+    let rec runImpl (prog: Instruction list) (idx: int) (frq: int) (regs: Map<char, int>) =
+        match List.tryItem idx prog with
+        | None -> frq
+        | Some instr -> 
+            match instr with
+            | Send (reg) -> 
+                let q = tryFindOrDefault reg regs
+                runImpl prog (idx + 1) q regs
+            | Rec (reg) ->
+                match tryFindOrDefault reg regs with
+                | 0 -> runImpl prog (idx + 1) frq regs
+                | x -> x
+            | Set (reg, arg) -> 
+                let value = tryRead arg regs
+                runImpl prog (idx + 1) frq (Map.add reg value regs)
+            | Add (reg, arg) -> 0
+            | Mul (reg, arg) -> 0
+            | Mod (reg, arg) -> 0
+            | Jump (reg, arg) -> 0
+    runImpl instructions 0 0 Map.empty
 
 module Tests =
 
