@@ -42,28 +42,42 @@ let tryRead arg regs =
     | Number n -> n
     | Register a -> tryFindOrDefault a regs
 
-let run (program: string list): int = 
-    let instructions = program |> List.map parse
-    let rec runImpl (prog: Instruction list) (idx: int) (frq: int) (regs: Map<char, int>) =
-        match List.tryItem idx prog with
+let doMethod reg arg registers f =
+    let value = tryRead arg registers
+    let register = tryFindOrDefault reg registers
+    Map.add reg (f value register) registers
+
+let run (instructions: string list): int = 
+    let program = instructions |> List.map parse
+    let rec runImpl  (idx: int) (frq: int) (regs: Map<char, int>) =
+        match List.tryItem idx program with
         | None -> frq
         | Some instr -> 
             match instr with
             | Send (reg) -> 
                 let q = tryFindOrDefault reg regs
-                runImpl prog (idx + 1) q regs
+                runImpl (idx + 1) q regs
             | Rec (reg) ->
                 match tryFindOrDefault reg regs with
-                | 0 -> runImpl prog (idx + 1) frq regs
-                | x -> x
+                | 0 -> runImpl (idx + 1) frq regs
+                | _ -> frq
             | Set (reg, arg) -> 
                 let value = tryRead arg regs
-                runImpl prog (idx + 1) frq (Map.add reg value regs)
-            | Add (reg, arg) -> 0
-            | Mul (reg, arg) -> 0
-            | Mod (reg, arg) -> 0
-            | Jump (reg, arg) -> 0
-    runImpl instructions 0 0 Map.empty
+                runImpl (idx + 1) frq (Map.add reg value regs)
+            | Add (reg, arg) -> 
+                let registers = doMethod reg arg regs (+)
+                runImpl (idx + 1) frq registers
+            | Mul (reg, arg) -> 
+                let registers = doMethod reg arg regs (*)
+                runImpl (idx + 1) frq registers
+            | Mod (reg, arg) -> 
+                let registers = doMethod reg arg regs (fun value reg -> reg % value)
+                runImpl (idx + 1) frq registers
+            | Jump (reg, arg) -> 
+                match tryRead reg regs with
+                | 0 -> runImpl (idx + 1) frq regs
+                | _ -> runImpl (idx + tryRead arg regs) frq regs
+    runImpl 0 0 Map.empty
 
 module Tests =
 
@@ -83,7 +97,7 @@ module Tests =
         "jgz a -2"
     ]
 
-    [<Fact(Skip = "Not implemented")>]
+    [<Fact>]
     let ``[Part 1] Test input produces value of 4`` ()=
         run testInput |> should equal 4
 
