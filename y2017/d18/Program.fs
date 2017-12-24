@@ -1,8 +1,8 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open Day18
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
+    let puzzleInput = System.IO.File.ReadAllLines "puzzle-input" |> Array.toList
+    run puzzleInput
+    |> printfn "Part 1: %d"
     0 // return an integer exit code
