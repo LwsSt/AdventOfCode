@@ -1,6 +1,10 @@
 module Day01
+open System.Linq
+open System.Collections.Generic
 
-let parsePuzzle1 (input: string list): int = failwith "Not implemented"
+let parsePuzzle1 (input: string list): int = Seq.sumBy int input
+
+let parsePuzzle2 (input: string list): int = failwith "Not implemented"
 
 module Tests = 
 
@@ -22,3 +26,21 @@ module Tests =
     [<Fact>]
     let ``[-1; -2; -3] results in -6`` () =
         parsePuzzle1 ["-1"; "-2"; "-3"] |> should equal -6
+
+    [<Fact>]
+    let ``[+1; -2; +3; +1] repeats frequency 2`` () =
+        parsePuzzle1 ["+1"; "-2"; "+3"; "+1"] |> should equal 3
+
+    [<Fact>]
+    let ``[+1; -1] repeats frequency 0`` () =
+        parsePuzzle2 ["+1"; "-1"] |> should equal 0
+
+    [<Fact>]
+    let ``[+3; +3; +4; -2; -4] repeats frequency 10`` () =
+        parsePuzzle2 ["+3"; "+3"; "+4"; "-2"; "-4"] |> should equal 10
+
+    let ``[-6; +3; +8; +5; -6] repeats frequency 5`` () =
+        parsePuzzle2 ["-6"; "+3"; "+8"; "+5"; "-6"] |> should equal 5
+
+    let ``[+7; +7; -2; -7; -4] repeats frequency  14`` () =
+        parsePuzzle2 ["+7"; "+7"; "-2"; "-7"; "-4"] |> should equal 14
