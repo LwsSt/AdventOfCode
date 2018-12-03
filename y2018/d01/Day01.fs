@@ -1,10 +1,15 @@
 module Day01
-open System.Linq
-open System.Collections.Generic
 
 let parsePuzzle1 (input: string list): int = Seq.sumBy int input
 
-let parsePuzzle2 (input: string list): int = failwith "Not implemented"
+let parsePuzzle2 (input: string list): int =
+    let cycle xs = seq { while true do yield! xs }
+    let deltas = Seq.map int input
+    cycle deltas
+    |> Seq.scan (fun (f, seen) d -> f + d, Set.add f seen) (0, Set.empty)
+    |> Seq.find (fun (f, seen) -> Set.contains f seen)
+    |> fst
+
 
 module Tests = 
 
