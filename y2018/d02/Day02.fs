@@ -1,5 +1,7 @@
 module Day02
 
+open System
+
 let puzzle1 (input:string list): int =
     let letterCount (str: string): (char * int) list =
         str
@@ -18,13 +20,22 @@ let puzzle1 (input:string list): int =
         |> Seq.length
     letters2 * letters3
 
-let puzzle2 (input:string list): (string*string) = failwith "Not implemented"
+let puzzle2 (input:string list): (string*string) =
+    let compareString (str1:string) (str2:string):string =
+        str1
+        |> Seq.filter (str2.Contains)
+        |> String.Concat
+    input
+    |> Seq.collect (fun s1 -> Seq.map (fun s2 -> (s1, compareString s1 s2)) input)
+    |> Seq.filter (fun (a, b) -> String.length a = ((String.length b) - 1))
+    |> Seq.head
+
 
 module Tests = 
     open FsUnit
     open Xunit
 
-    let exampleInput = [
+    let exampleInput1 = [
         "abcdef"
         "bababc"
         "abbcde"
@@ -36,4 +47,17 @@ module Tests =
 
     [<Fact>]
     let ``Example input produces 12`` () =
-        puzzle1 exampleInput |> should equal 12
+        puzzle1 exampleInput1 |> should equal 12
+
+    let exampleInput2 = [
+        "abcde"
+        "fghij"
+        "klmno"
+        "pqrst"
+        "fguij"
+        "axcye"
+        "wvxyz"
+    ]
+
+    let ``Example input produces (fghij, fguij)`` () =
+        puzzle2 exampleInput2 |> should equal ("fghij", "fguij")
