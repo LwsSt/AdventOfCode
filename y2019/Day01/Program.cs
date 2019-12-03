@@ -8,12 +8,12 @@ namespace AOC2019.Day01
     {
         static void Main(string[] args)
         {
-            Part1Example();
-            
+            Part2Example();
+
             var puzzleInput = File.ReadAllLines(@"Day01\input.txt");
             int totalFuel = puzzleInput
                 .Select(str => int.Parse(str))
-                .Select(MassCalculator.Calculate)
+                .Select(MassCalculator.CalculateTotal)
                 .Sum();
 
             Console.WriteLine($"Total Fuel {totalFuel}");
@@ -34,6 +34,21 @@ namespace AOC2019.Day01
                 Console.WriteLine($"Mass {mass, -6} expected Fuel: {fuel, -6} Actual: {MassCalculator.Calculate(mass)}");
             }
         }
+
+        public static void Part2Example()
+        {
+            var testInputs = new[]
+            {
+                (mass: 14, fuel: 2),
+                (mass: 1969, fuel: 966),
+                (mass: 100756, fuel: 50346)
+            };
+
+            foreach (var (mass, fuel) in testInputs)
+            {
+                Console.WriteLine($"Mass {mass, -6} expected Fuel: {fuel, -6} Actual: {MassCalculator.CalculateTotal(mass)}");
+            }
+        }
     }
 
     public static class MassCalculator
@@ -44,6 +59,21 @@ namespace AOC2019.Day01
             fuel =  fuel - 2;
 
             return (int) fuel;
+        }
+
+        public static int CalculateTotal(int mass)
+        {
+            int fuel = 0;
+
+            int additionalFuel = Calculate(mass);
+            
+            while(additionalFuel >= 0)
+            {
+                fuel += additionalFuel;
+                additionalFuel = Calculate(additionalFuel);
+            }
+
+            return fuel;
         }
     }
 }
