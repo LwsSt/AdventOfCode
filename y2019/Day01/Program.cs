@@ -6,18 +6,18 @@ namespace AOC2019.Day01
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            Part2Example();
+        // static void Main(string[] args)
+        // {
+        //     Part2Example();
 
-            var puzzleInput = File.ReadAllLines(@"Day01\input.txt");
-            int totalFuel = puzzleInput
-                .Select(str => int.Parse(str))
-                .Select(MassCalculator.CalculateTotal)
-                .Sum();
+        //     var puzzleInput = File.ReadAllLines(@"Day01\input.txt");
+        //     int totalFuel = puzzleInput
+        //         .Select(str => int.Parse(str))
+        //         .Select(MassCalculator.CalculateTotal)
+        //         .Sum();
 
-            Console.WriteLine($"Total Fuel {totalFuel}");
-        }
+        //     Console.WriteLine($"Total Fuel {totalFuel}");
+        // }
 
         public static void Part1Example()
         {
