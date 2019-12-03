@@ -8,15 +8,17 @@ namespace AOC2019.Day02
     {
         static void Main(string[] args)
         {
-            Part1Example();
+            //Part1Example();
 
             var puzzleInput = File.ReadAllText(@"Day02\input.txt");
             var programInput = puzzleInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(str => int.Parse(str))
                 .ToArray();
 
-            programInput[1] = 12;
-            programInput[2] = 2;
+            // programInput[1] = 12;
+            // programInput[2] = 2;
+            programInput[1] = 22;
+            programInput[2] = 54;
             
             var programOutput = IntcodeComputer.Run(programInput);
             Console.WriteLine($"Value at Position 0: {programOutput[0]}");
