@@ -6,23 +6,23 @@ namespace AOC2019.Day02
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            //Part1Example();
+        // static void Main(string[] args)
+        // {
+        //     //Part1Example();
 
-            var puzzleInput = File.ReadAllText(@"Day02\input.txt");
-            var programInput = puzzleInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Select(str => int.Parse(str))
-                .ToArray();
+        //     var puzzleInput = File.ReadAllText(@"Day02\input.txt");
+        //     var programInput = puzzleInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
+        //         .Select(str => int.Parse(str))
+        //         .ToArray();
 
-            // programInput[1] = 12;
-            // programInput[2] = 2;
-            programInput[1] = 22;
-            programInput[2] = 54;
+        //     // programInput[1] = 12;
+        //     // programInput[2] = 2;
+        //     programInput[1] = 22;
+        //     programInput[2] = 54;
             
-            var programOutput = IntcodeComputer.Run(programInput);
-            Console.WriteLine($"Value at Position 0: {programOutput[0]}");
-        }
+        //     var programOutput = IntcodeComputer.Run(programInput);
+        //     Console.WriteLine($"Value at Position 0: {programOutput[0]}");
+        // }
 
         public static void Part1Example()
         {
