@@ -15,16 +15,18 @@ namespace AOC2019.Day03
 
         private static void PrintCrossingPoints(IEnumerable<Wire> wires1, IEnumerable<Wire> wires2)
         {
-            var product = from w1 in wires1
-                          from w2 in wires2
-                          select (w1, w2);
-            var crossingPoints = product.Where(ws => ws.w1.Crosses(ws.w2))
-                .Select(ws => ws.w1.CrossingPoint(ws.w2));
+            var product = from wire1 in wires1
+                          from wire2 in wires2
+                          select (wire1, wire2);
+
+            var crossingPoints = product
+                .Where(wires => wires.wire1.Crosses(wires.wire2))
+                .Select(wires => wires.wire1.CrossingPoint(wires.wire2));
 
             Console.WriteLine("Crossing Points:");
             foreach (var point in crossingPoints)
             {
-                Console.WriteLine(point.ToString());
+                Console.WriteLine($"{point.ToString()}: Length: {Math.Abs(point.X) + Math.Abs(point.Y)}");
             }
         }
 
