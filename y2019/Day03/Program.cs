@@ -11,36 +11,75 @@ namespace AOC2019.Day03
         public static void Main(string[] args)
         {
             //PrintPart1Examples();
+            //PrintPart2Examples();
 
             string[] input = File.ReadAllLines(@"Day03\input.txt");
 
-            var wires1 = Parser.ParseWires(input[0].Split(',', StringSplitOptions.RemoveEmptyEntries));
-            var wires2 = Parser.ParseWires(input[1].Split(',', StringSplitOptions.RemoveEmptyEntries));
+            var wires1 = Parser.ParseWires(input[0].Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
+            var wires2 = Parser.ParseWires(input[1].Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
 
-            PrintCrossingPoints(wires1, wires2);
+            //PrintCrossingPoints(wires1, wires2);
+            var crossingPoints = GetCrossingPoints(wires1, wires2);
+            crossingPoints.Remove(new Point(0, 0));
+            
+            var distanceToCrossing = GetShortestDistanceToCrossing(crossingPoints, wires1, wires2);
+            Console.WriteLine($"Shortest distance to crossing point {distanceToCrossing}");
         }
 
-        private static void PrintCrossingPoints(IEnumerable<Wire> wires1, IEnumerable<Wire> wires2)
+        private static List<Point> GetCrossingPoints(List<Wire> wires1, List<Wire> wires2)
         {
             var product = from wire1 in wires1
                           from wire2 in wires2
                           select (wire1, wire2);
 
-            var crossingPoints = product
+            return product
                 .Where(wires => wires.wire1.Crosses(wires.wire2))
-                .Select(wires => wires.wire1.CrossingPoint(wires.wire2));
+                .Select(wires => wires.wire1.CrossingPoint(wires.wire2))
+                .ToList();
+        }
+
+        private static void PrintCrossingPoints(List<Wire> wires1, List<Wire> wires2)
+        {
+            var crossingPoints = GetCrossingPoints(wires1, wires2);
 
             var shortestCrossingDistance = crossingPoints
                 .Select(point => Math.Abs(point.X) + Math.Abs(point.Y))
                 .Min();
 
             Console.WriteLine($"CrossingDistance: {shortestCrossingDistance}");
+        }
 
-            // Console.WriteLine("Crossing Points:");
-            // foreach (var point in crossingPoints)
-            // {
-            //     Console.WriteLine($"{point.ToString()}: Length: {Math.Abs(point.X) + Math.Abs(point.Y)}");
-            // }
+        private static int GetShortestDistanceToCrossing(List<Point> points, List<Wire> wires1, List<Wire> wires2)
+        {
+            return GetCrossingPointLengths().Min();
+
+            IEnumerable<int> GetCrossingPointLengths()
+            {
+                foreach (var point in points)
+                {
+                    int length1UntilCrossing = GetWireLength(point, wires1);
+                    int length2UntilCrossing = GetWireLength(point, wires2);
+
+                    yield return length1UntilCrossing + length2UntilCrossing;
+                }
+            }
+
+            int GetWireLength(Point p, List<Wire> allWires)
+            {
+                var wiresUntilCrossing = GetWiresUntilCrossing(p, allWires);
+                var lastWire = allWires[wiresUntilCrossing.Count];
+
+                return wiresUntilCrossing.Select(w => w.Length).Sum() + lastWire.LengthToPoint(p);
+            }
+
+            List<Wire> GetWiresUntilCrossing(Point p, List<Wire> wires)
+            {
+                var wiresUntilCrossing = wires.TakeWhile(w => !w.ContainsPoint(p))
+                    .ToList();
+                Debug.Assert(wiresUntilCrossing.Count != wires.Count, "Filter contains all orignal Wires");
+
+                return wiresUntilCrossing;
+            }
         }
 
         private static void PrintPart1Examples()
@@ -54,14 +93,36 @@ namespace AOC2019.Day03
 
             foreach (var test in testInputs)
             {
-                var wires1 = Parser.ParseWires(test.Item1.Split(',', StringSplitOptions.RemoveEmptyEntries));
-                var wires2 = Parser.ParseWires(test.Item2.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                var wires1 = Parser.ParseWires(test.Item1.Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
+                var wires2 = Parser.ParseWires(test.Item2.Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
 
                 Console.WriteLine("Example:");
                 PrintCrossingPoints(wires1, wires2);
 
                 Console.WriteLine();
-                Console.WriteLine();
+            }
+        }
+
+        private static void PrintPart2Examples()
+        {
+            var testInputs = new[]
+            {
+                ("R8,U5,L5,D3", "U7,R6,D4,L4", 30),
+                ("R75,D30,R83,U83,L12,D49,R71,U7,L72", "U62,R66,U55,R34,D71,R55,D58,R83", 610),
+                ("R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51", "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7", 410),
+            };
+
+            foreach (var test in testInputs)
+            {
+                var wires1 = Parser.ParseWires(test.Item1.Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
+                var wires2 = Parser.ParseWires(test.Item2.Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
+
+                var crossingPoints = GetCrossingPoints(wires1, wires2);
+                crossingPoints.Remove(new Point(0, 0));
+                
+                var distanceToCrossing = GetShortestDistanceToCrossing(crossingPoints, wires1, wires2);
+
+                Console.WriteLine($"Expected shortest distance {test.Item3, 5} Actual: {distanceToCrossing, 5}");
             }
         }
     }
@@ -95,7 +156,7 @@ namespace AOC2019.Day03
                         throw new  Exception($"Instrustion not recognised: {instr}");
                 }
 
-                yield return new Wire(origin, next);
+                yield return new Wire(origin, next, length);
                 
                 origin = next;
             }
@@ -112,14 +173,17 @@ namespace AOC2019.Day03
 
     class Wire
     {
-        public Wire(Point start, Point end)
+        public Wire(Point start, Point end, int length)
         {
             Start = start;
             End = end;
+            Length = length;
         }
 
         public Point Start { get; }
         public Point End { get; }
+
+        public int Length { get; }
 
         private bool IsVertical => Start.X == End.X;
         private bool IsHorizontal => Start.Y == End.Y;
@@ -146,6 +210,19 @@ namespace AOC2019.Day03
             }
         }
 
+        public int LengthToPoint(Point point)
+        {
+            Debug.Assert(ContainsPoint(point), "Point is not on wire");
+            if (this.IsVertical)
+            {
+                return Math.Abs(Start.Y - point.Y);
+            }
+            else
+            {
+                return Math.Abs(Start.X - point.X);
+            }
+        }
+
         public bool Crosses(Wire that) 
         {
             if ((this.IsVertical && that.IsVertical) ||
@@ -168,6 +245,12 @@ namespace AOC2019.Day03
                 return this.LowerX <= that.Start.X && that.Start.X <= this.UpperX &&
                     that.LowerY <= this.Start.Y && this.Start.Y <= that.UpperY;
             }
+        }
+
+        public bool ContainsPoint(Point point)
+        {
+            return this.LowerX <= point.X && point.X <= this.UpperX &&
+                this.LowerY <= point.Y && point.Y <= this.UpperY;
         }
     }
 
