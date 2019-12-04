@@ -10,7 +10,14 @@ namespace AOC2019.Day03
     {
         public static void Main(string[] args)
         {
-            PrintPart1Examples();
+            //PrintPart1Examples();
+
+            string[] input = File.ReadAllLines(@"Day03\input.txt");
+
+            var wires1 = Parser.ParseWires(input[0].Split(',', StringSplitOptions.RemoveEmptyEntries));
+            var wires2 = Parser.ParseWires(input[1].Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            PrintCrossingPoints(wires1, wires2);
         }
 
         private static void PrintCrossingPoints(IEnumerable<Wire> wires1, IEnumerable<Wire> wires2)
@@ -23,11 +30,17 @@ namespace AOC2019.Day03
                 .Where(wires => wires.wire1.Crosses(wires.wire2))
                 .Select(wires => wires.wire1.CrossingPoint(wires.wire2));
 
-            Console.WriteLine("Crossing Points:");
-            foreach (var point in crossingPoints)
-            {
-                Console.WriteLine($"{point.ToString()}: Length: {Math.Abs(point.X) + Math.Abs(point.Y)}");
-            }
+            var shortestCrossingDistance = crossingPoints
+                .Select(point => Math.Abs(point.X) + Math.Abs(point.Y))
+                .Min();
+
+            Console.WriteLine($"CrossingDistance: {shortestCrossingDistance}");
+
+            // Console.WriteLine("Crossing Points:");
+            // foreach (var point in crossingPoints)
+            // {
+            //     Console.WriteLine($"{point.ToString()}: Length: {Math.Abs(point.X) + Math.Abs(point.Y)}");
+            // }
         }
 
         private static void PrintPart1Examples()
