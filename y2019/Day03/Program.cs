@@ -146,14 +146,14 @@ namespace AOC2019.Day03
                 Debug.Assert(that.IsHorizontal, "Other wire should be horizontal");
 
                 return that.LowerX <= this.Start.X && this.Start.X <= that.UpperX &&
-                    this.LowerY <= that.Start.Y && this.UpperY >= that.Start.Y;
+                    this.LowerY <= that.Start.Y && that.Start.Y <= this.UpperY;
             }
             else
             {
                 Debug.Assert(that.IsVertical, "Other wire should be vertical");
 
                 return this.LowerX <= that.Start.X && that.Start.X <= this.UpperX &&
-                    that.LowerY <= this.Start.Y && that.UpperY >= this.Start.X;
+                    that.LowerY <= this.Start.Y && this.Start.Y <= that.UpperY;
             }
         }
     }
