@@ -8,23 +8,23 @@ namespace AOC2019.Day03
 {
     class Program
     {
-        public static void Main(string[] args)
-        {
-            //PrintPart1Examples();
-            //PrintPart2Examples();
+        // public static void Main(string[] args)
+        // {
+        //     //PrintPart1Examples();
+        //     //PrintPart2Examples();
 
-            string[] input = File.ReadAllLines(@"Day03\input.txt");
+        //     string[] input = File.ReadAllLines(@"Day03\input.txt");
 
-            var wires1 = Parser.ParseWires(input[0].Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
-            var wires2 = Parser.ParseWires(input[1].Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
+        //     var wires1 = Parser.ParseWires(input[0].Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
+        //     var wires2 = Parser.ParseWires(input[1].Split(',', StringSplitOptions.RemoveEmptyEntries)).ToList();
 
-            //PrintCrossingPoints(wires1, wires2);
-            var crossingPoints = GetCrossingPoints(wires1, wires2);
-            crossingPoints.Remove(new Point(0, 0));
+        //     //PrintCrossingPoints(wires1, wires2);
+        //     var crossingPoints = GetCrossingPoints(wires1, wires2);
+        //     crossingPoints.Remove(new Point(0, 0));
             
-            var distanceToCrossing = GetShortestDistanceToCrossing(crossingPoints, wires1, wires2);
-            Console.WriteLine($"Shortest distance to crossing point {distanceToCrossing}");
-        }
+        //     var distanceToCrossing = GetShortestDistanceToCrossing(crossingPoints, wires1, wires2);
+        //     Console.WriteLine($"Shortest distance to crossing point {distanceToCrossing}");
+        // }
 
         private static List<Point> GetCrossingPoints(List<Wire> wires1, List<Wire> wires2)
         {
