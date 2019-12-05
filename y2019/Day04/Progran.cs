@@ -10,12 +10,12 @@ namespace AOC2019.Day04
     {
         public static void Main(string[] args)
         {
-            // Console.WriteLine($"111111 Valid:{CheckNumber(111111)}");
-            // Console.WriteLine($"223450 Valid:{CheckNumber(223450)}");
-            // Console.WriteLine($"123789 Valid:{CheckNumber(123789)}");
+            Console.WriteLine($"112233 Valid:{CheckNumberPart2(112233)} Expected: true");
+            Console.WriteLine($"123444 Valid:{CheckNumberPart2(123444)} Expected: false");
+            Console.WriteLine($"111122 Valid:{CheckNumberPart2(111122)} Expected: true");
 
             var validCodes = GetRange()
-                .Where(CheckNumber);
+                .Where(CheckNumberPart2);
 
             int validCodeCount = validCodes.Count();
             Console.WriteLine(validCodeCount);
@@ -29,7 +29,8 @@ namespace AOC2019.Day04
             }
         }
 
-        static bool CheckNumber(int target) => CheckDigits(GetDigits(target));
+        static bool CheckNumberPart1(int target) => CheckDigitsPart1(GetDigits(target));
+        static bool CheckNumberPart2(int target) => CheckDigitsPart2(GetDigits(target));
 
         static int[] GetDigits(int target)
         {
@@ -43,7 +44,35 @@ namespace AOC2019.Day04
             return output;
         }
 
-        static bool CheckDigits(int[] digits)
+        static bool CheckDigitsPart2(int[] digits)
+        {
+            var groupings = new List<int>();
+
+            int previousDigit = digits[0];
+            groupings.Add(1);
+            for (int i = 1; i < digits.Length; i++)
+            {
+                if (previousDigit > digits[i])
+                {
+                    return false;
+                }
+
+                if(previousDigit == digits[i])
+                {
+                    groupings[groupings.Count - 1]++;
+                }
+                else
+                {
+                    groupings.Add(1);
+                }
+
+                previousDigit = digits[i];
+            }
+
+            return groupings.Contains(2);
+        }
+
+        static bool CheckDigitsPart1(int[] digits)
         {
             bool twoConsecutiveDigits = false;
 
