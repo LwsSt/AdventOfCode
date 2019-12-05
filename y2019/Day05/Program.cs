@@ -14,6 +14,10 @@ namespace AOC2019.Day05
                 .Select(int.Parse)
                 .ToArray();
 
+            // int[] memory = new[]{3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+            //     1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+            //     999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
+
             IntcodeComputer.Run(memory);
         }
     }
@@ -27,6 +31,10 @@ namespace AOC2019.Day05
             [2] = Mul,
             [3] = In,
             [4] = Out,
+            [5] = JIT,
+            [6] = JIF,
+            [7] = LT,
+            [8] = Eq,
         };
 
         public static int[] Run(int[] input)
@@ -62,9 +70,6 @@ namespace AOC2019.Day05
         private static void Add(int[] memory, int instrPtr, out int instructionLength)
         {
             instructionLength = 4;
-            int opCode = memory[instrPtr];
-            int arg1 = memory[instrPtr + 1];
-            int arg2 = memory[instrPtr + 2];
             int outputArg = memory[instrPtr + 3];
 
             int value1 = GetParameterValue(memory, instrPtr, 0);
@@ -76,9 +81,6 @@ namespace AOC2019.Day05
         private static void Mul(int[] memory, int instrPtr, out int instructionLength)
         {
             instructionLength = 4;
-            int opCode = memory[instrPtr];
-            int arg1 = memory[instrPtr + 1];
-            int arg2 = memory[instrPtr + 2];
             int outputArg = memory[instrPtr + 3];
 
             int value1 = GetParameterValue(memory, instrPtr, 0);
@@ -105,12 +107,63 @@ namespace AOC2019.Day05
         {
             instructionLength = 2;
 
-            int opCode = memory[instrPtr];
-            int arg = memory[instrPtr + 1];
-
-            int value = GetParameterValue(memory, arg, GetParameterMode(opCode, 0));
+            int value = GetParameterValue(memory, instrPtr, 0);
 
             Console.WriteLine($"OUTPUT: {value}");
+        }
+
+        private static void JIT(int[] memory, int instrPtr, out int instructionLength)
+        {
+            int value = GetParameterValue(memory, instrPtr, 0);
+            if (value != 0)
+            {
+                int pointer = GetParameterValue(memory, instrPtr, 1);
+                instructionLength = pointer - instrPtr;
+            }
+            else
+            {
+                instructionLength = 3;
+            }
+        }
+
+        private static void JIF(int[] memory, int instrPtr, out int instructionLength)
+        {
+            int value = GetParameterValue(memory, instrPtr, 0);
+            if(value == 0)
+            {
+                int pointer = GetParameterValue(memory, instrPtr, 1);
+                instructionLength = pointer - instrPtr;
+
+            }
+            else
+            {
+                instructionLength = 3;
+            }
+        }
+
+        private static void LT(int[] memory, int instrPtr, out int instructionLength)
+        {
+            instructionLength = 4;
+            int arg1 = GetParameterValue(memory, instrPtr, 0);
+            int arg2 = GetParameterValue(memory, instrPtr, 1);
+            int outputArg = memory[instrPtr + 3];
+
+            
+            int output = arg1 < arg2 ? 1 : 0;
+
+            memory[outputArg] = output;
+        }
+
+        private static void Eq(int[] memory, int instrPtr, out int instructionLength)
+        {
+            instructionLength = 4;
+            int arg1 = GetParameterValue(memory, instrPtr, 0);
+            int arg2 = GetParameterValue(memory, instrPtr, 1);
+            int outputArg = memory[instrPtr + 3];
+            
+            int output = arg1 == arg2 ? 1 : 0;
+
+            memory[outputArg] = output;
         }
 
         private static int GetOpCode(int fullCode) => fullCode % 100;
