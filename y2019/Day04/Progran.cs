@@ -8,7 +8,8 @@ namespace AOC2019.Day04
 {
     class Program
     {
-        public static void Main(string[] args)
+        //public static void Main(string[] args)
+        public void Main(string[] args)
         {
             Console.WriteLine($"112233 Valid:{CheckNumberPart2(112233)} Expected: true");
             Console.WriteLine($"123444 Valid:{CheckNumberPart2(123444)} Expected: false");
