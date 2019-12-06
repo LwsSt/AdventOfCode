@@ -11,12 +11,19 @@ namespace AOC2019.Day06
         public static void Main(string[] args)
         {
             //PrintPart1Example();
+            //PrintPart2Example();
 
             var input = File.ReadLines(@"Day06\input.txt");
             var tree = Construct(input);
 
             Console.WriteLine("Total orbits in input");
             Console.WriteLine(tree.GetTotalParents());
+
+            var you = tree.FindNode("YOU");
+            var santa = tree.FindNode("SAN");
+
+            Console.WriteLine("Steps needed");
+            Console.WriteLine(you.TravelToNode(santa));
         }
 
         static Tree Construct(IEnumerable<string> map)
@@ -57,6 +64,34 @@ namespace AOC2019.Day06
             var tree = Construct(input);
             Console.WriteLine("Total orbits: {0}", tree.GetTotalParents());
         }
+
+        static void PrintPart2Example()
+        {
+            var input = new[]
+            {
+                "COM)B",
+                "B)C",
+                "C)D",
+                "D)E",
+                "E)F",
+                "B)G",
+                "G)H",
+                "D)I",
+                "E)J",
+                "J)K",
+                "K)L",
+                "K)YOU",
+                "I)SAN",
+            };
+
+            var tree = Construct(input);
+
+            var you = tree.FindNode("YOU");
+            var santa = tree.FindNode("SAN");
+
+            int steps = you.TravelToNode(santa);
+            Console.WriteLine("Steps needed: {0}", steps);
+        }
     }
 
     public class Tree
@@ -76,6 +111,8 @@ namespace AOC2019.Day06
                 return node;
             }
         }
+
+        public Node FindNode(string label) => nodes[label];
 
         public ICollection<Node> AllNodes => nodes.Values;
 
@@ -120,14 +157,49 @@ namespace AOC2019.Day06
             node.Parent = this;
         }
 
+        public int TravelToNode(Node target)
+        {
+            int count = 0;
+            for (var parent = this.Parent; parent != null; parent = parent.Parent)
+            {
+                int childCount = parent.TraverseDescendents(target, 0);
+                if (childCount > 0)
+                {
+                    return count + childCount;
+                }
+
+                count++;
+            }
+
+            return 0;
+        }
+
+        private int TraverseDescendents(Node target, int count)
+        {
+            if (Children.Contains(target))
+            {
+                return count;
+            }
+
+            int nextCount = count + 1;
+            foreach (var child in Children)
+            {
+                int childCount = child.TraverseDescendents(target, nextCount);
+                if (childCount > 0)
+                {
+                    return childCount;
+                }
+            }
+
+            return 0;
+        }
+
         public int GetTotalParents()
         {
             int parentCount = 0;
-            var target = this.Parent;
-            while (target != null)
+            for (var target = this.Parent; target != null; target = target.Parent)
             {
                 parentCount++;
-                target = target.Parent;
             }
 
             return parentCount;
