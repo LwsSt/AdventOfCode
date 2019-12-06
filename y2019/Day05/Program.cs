@@ -7,7 +7,8 @@ namespace AOC2019.Day05
 {
     class Program
     {
-        public static void Main(string[] args)
+        //public static void Main(string[] args)
+        public void Main(string[] args)
         {
             string puzzleInput = File.ReadAllText(@"Day05\input.txt");
             int[] memory = puzzleInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
