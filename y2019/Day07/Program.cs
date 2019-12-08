@@ -10,7 +10,8 @@ namespace AOC2019.Day07
     {
         const int Length = 5;
 
-        public static void Main(string[] args)
+        //public static void Main(string[] args)
+        public void Main(string[] args)
         {
 
             string input = File.ReadAllText(@"Day07\input.txt");
