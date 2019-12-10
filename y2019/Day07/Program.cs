@@ -12,8 +12,8 @@ namespace AOC2019.Day07
     {
         const int Length = 5;
 
-        public static void Main(string[] args)
-        // public void Main(string[] args)
+        // public static void Main(string[] args)
+        public void Main(string[] args)
         {
             //PrintPart1Examples();
             // PrintPart2Examples();
