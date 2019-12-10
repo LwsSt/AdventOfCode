@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace AOC2019.Day07
 {
@@ -10,8 +12,8 @@ namespace AOC2019.Day07
     {
         const int Length = 5;
 
-        //public static void Main(string[] args)
-        public void Main(string[] args)
+        public static void Main(string[] args)
+        // public void Main(string[] args)
         {
 
             string input = File.ReadAllText(@"Day07\input.txt");
@@ -43,24 +45,38 @@ namespace AOC2019.Day07
 
             foreach(var (memory, phase) in testInputs)
             {
-                RunAmplificationWithPhase(memory, phase);
+                var output = RunAmplificationWithPhase(memory, phase);
+                Console.WriteLine(output.Print());
             }
         }
 
         static int[] RunAmplificationWithPhase(int[] memory, int[] phase)
         {
-            int[] b = phase.SelectMany(p => new[]{ p, 0 })
-                .Concat(new[]{ 0, 0 })
-                .ToArray();
-            
-            var buffer = new Buffer(b);
-            var computer = new IntcodeComputer(buffer.ReadInput, buffer.WriteOutput);
-            for (int i = 0; i < Length; i++)
+            var queues = new BlockingCollection<int>[phase.Length];
+            for (int i = 0; i < queues.Length; i++)
             {
-                computer.Run(memory);
+                queues[i] = new BlockingCollection<int>();
+                queues[i].Add(phase[i]);
             }
 
-            return b;
+            var threads = new Thread[phase.Length];
+            for (int i = 0; i < phase.Length; i++)
+            {
+                var inQ = queues[i];
+                var outQ = queues[(i + 1) % queues.Length];
+
+                var computer = new IntcodeComputer(inQ.Take, outQ.Add);
+
+                threads[i] = new Thread(obj => computer.Run((int[]) obj));
+                threads[i].Start(memory);
+            }
+
+            for (int i = 0; i < threads.Length; i++)
+            {
+                threads[i].Join();
+            }
+
+            return queues.Last().ToArray();
         }
 
         public static IEnumerable<int[]> GetAllPhases()
