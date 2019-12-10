@@ -15,6 +15,8 @@ namespace AOC2019.Day07
         public static void Main(string[] args)
         // public void Main(string[] args)
         {
+            //PrintPart1Examples();
+            // PrintPart2Examples();
 
             string input = File.ReadAllText(@"Day07\input.txt");
             int[] memory = input.Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -50,6 +52,21 @@ namespace AOC2019.Day07
             }
         }
 
+        static void PrintPart2Examples()
+        {
+            var testInputs = new[]
+            {
+                (new int[]{3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5}, new[]{9,8,7,6,5}),
+                (new int[]{3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10}, new[]{9,7,8,5,6}),
+            }; 
+
+            foreach(var (memory, phase) in testInputs)
+            {
+                var output = RunAmplificationWithPhase(memory, phase);
+                Console.WriteLine(output.Print());
+            }
+        }
+
         static int[] RunAmplificationWithPhase(int[] memory, int[] phase)
         {
             var queues = new BlockingCollection<int>[phase.Length];
@@ -58,7 +75,7 @@ namespace AOC2019.Day07
                 queues[i] = new BlockingCollection<int>();
                 queues[i].Add(phase[i]);
             }
-            queues.First().Add(0);
+            queues.First().Add(0); // Prime first input
 
             var threads = new Thread[phase.Length];
             for (int i = 0; i < phase.Length; i++)
@@ -82,7 +99,8 @@ namespace AOC2019.Day07
 
         public static IEnumerable<int[]> GetAllPhases()
         {
-            int[] numbers = new int[]{ 0, 1, 2, 3, 4 };
+            // int[] numbers = new int[]{ 0, 1, 2, 3, 4 };
+            int[] numbers = new int[]{ 5, 6, 7, 8, 9 };
             return GetPermutations(numbers, numbers.Length);
             IEnumerable<int[]> GetPermutations(int[] arr, int size)
             {
