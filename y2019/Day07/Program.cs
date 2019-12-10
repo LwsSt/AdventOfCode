@@ -58,6 +58,7 @@ namespace AOC2019.Day07
                 queues[i] = new BlockingCollection<int>();
                 queues[i].Add(phase[i]);
             }
+            queues.First().Add(0);
 
             var threads = new Thread[phase.Length];
             for (int i = 0; i < phase.Length; i++)
@@ -71,12 +72,12 @@ namespace AOC2019.Day07
                 threads[i].Start(memory);
             }
 
-            for (int i = 0; i < threads.Length; i++)
+            foreach (var t in threads)
             {
-                threads[i].Join();
+                t.Join();
             }
 
-            return queues.Last().ToArray();
+            return queues.First().ToArray();
         }
 
         public static IEnumerable<int[]> GetAllPhases()
