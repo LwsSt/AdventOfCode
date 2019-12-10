@@ -8,7 +8,8 @@ namespace AOC2019.Day08
 {
     class Program
     {
-        public static void Main(string[] args)
+        //public static void Main(string[] args)
+        public void Main(string[] args)
         {
             int[] input = File.ReadAllText(@"Day08\input.txt")
                 .Where(c => Char.IsNumber(c))
