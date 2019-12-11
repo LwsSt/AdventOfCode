@@ -5,15 +5,15 @@ namespace AOC2019
 {
     public class IntcodeComputer
     {
-        delegate void Instruction(int[] memory, int instructionPtr, out int instructionLength);
-        private readonly Dictionary<int, Instruction> instructions;
-        private readonly Func<int> readInput;
-        private readonly Action<int> writeOutput;
-        private int relativeBase = 0;
+        delegate void Instruction(long[] memory, long instructionPtr, out int instructionLength);
+        private readonly Dictionary<long, Instruction> instructions;
+        private readonly Func<long> readInput;
+        private readonly Action<long> writeOutput;
+        private long relativeBase = 0;
 
-        public IntcodeComputer(Func<int> input, Action<int> output)
+        public IntcodeComputer(Func<long> input, Action<long> output)
         {
-            instructions = new Dictionary<int, Instruction>()
+            instructions = new Dictionary<long, Instruction>()
             {
                 [1] = Add,
                 [2] = Mul,
@@ -29,13 +29,13 @@ namespace AOC2019
             this.writeOutput = output;
         }
 
-        public int[] Run(int[] input)
+        public long[] Run(long[] input)
         {
-            var memory = new int[input.Length];
+            var memory = new long[input.Length];
             Array.Copy(input, memory, input.Length);
             int opCodeLength = 0;
 
-            for (int instrPtr = 0; instrPtr < memory.Length; )
+            for (long instrPtr = 0; instrPtr < memory.Length; )
             {
                 int opCode = GetOpCode(memory[instrPtr]);
                 if (opCode == 99)
@@ -59,55 +59,55 @@ namespace AOC2019
             return memory;
         }
 
-        private void Add(int[] memory, int instrPtr, out int instructionLength)
+        private void Add(long[] memory, long instrPtr, out int instructionLength)
         {
             instructionLength = 4;
 
-            int value1 = GetParameterValue(memory, instrPtr, 0);
-            int value2 = GetParameterValue(memory, instrPtr, 1);
-            int outputArg = GetOutPtr(memory, instrPtr, 2);
+            long value1 = GetParameterValue(memory, instrPtr, 0);
+            long value2 = GetParameterValue(memory, instrPtr, 1);
+            long outputArg = GetOutPtr(memory, instrPtr, 2);
 
             memory[outputArg] = value1 + value2;
         }
 
-        private void Mul(int[] memory, int instrPtr, out int instructionLength)
+        private void Mul(long[] memory, long instrPtr, out int instructionLength)
         {
             instructionLength = 4;
 
-            int value1 = GetParameterValue(memory, instrPtr, 0);
-            int value2 = GetParameterValue(memory, instrPtr, 1);
-            int outputArg = GetOutPtr(memory, instrPtr, 2);
+            long value1 = GetParameterValue(memory, instrPtr, 0);
+            long value2 = GetParameterValue(memory, instrPtr, 1);
+            long outputArg = GetOutPtr(memory, instrPtr, 2);
 
             memory[outputArg] = value1 * value2;
         }
 
-        private void In(int[] memory, int instrPtr, out int instructionLength)
+        private void In(long[] memory, long instrPtr, out int instructionLength)
         {
             instructionLength = 2;
 
-            int outputArg = GetOutPtr(memory, instrPtr, 0);
+            long outputArg = GetOutPtr(memory, instrPtr, 0);
 
-            int input = this.readInput();
+            long input = this.readInput();
 
             memory[outputArg] = input;
         }
 
-        private void Out(int[] memory, int instrPtr, out int instructionLength)
+        private void Out(long[] memory, long instrPtr, out int instructionLength)
         {
             instructionLength = 2;
 
-            int value = GetParameterValue(memory, instrPtr, 0);
+            long value = GetParameterValue(memory, instrPtr, 0);
 
             this.writeOutput(value);
         }
 
-        private void JIT(int[] memory, int instrPtr, out int instructionLength)
+        private void JIT(long[] memory, long instrPtr, out int instructionLength)
         {
-            int value = GetParameterValue(memory, instrPtr, 0);
+            long value = GetParameterValue(memory, instrPtr, 0);
             if (value != 0)
             {
-                int pointer = GetParameterValue(memory, instrPtr, 1);
-                instructionLength = pointer - instrPtr;
+                long pointer = GetParameterValue(memory, instrPtr, 1);
+                instructionLength = (int)(pointer - instrPtr);
             }
             else
             {
@@ -115,13 +115,13 @@ namespace AOC2019
             }
         }
 
-        private void JIF(int[] memory, int instrPtr, out int instructionLength)
+        private void JIF(long[] memory, long instrPtr, out int instructionLength)
         {
-            int value = GetParameterValue(memory, instrPtr, 0);
+            long value = GetParameterValue(memory, instrPtr, 0);
             if(value == 0)
             {
-                int pointer = GetParameterValue(memory, instrPtr, 1);
-                instructionLength = pointer - instrPtr;
+                long pointer = GetParameterValue(memory, instrPtr, 1);
+                instructionLength = (int)(pointer - instrPtr);
 
             }
             else
@@ -130,48 +130,48 @@ namespace AOC2019
             }
         }
 
-        private void LT(int[] memory, int instrPtr, out int instructionLength)
+        private void LT(long[] memory, long instrPtr, out int instructionLength)
         {
             instructionLength = 4;
-            int arg1 = GetParameterValue(memory, instrPtr, 0);
-            int arg2 = GetParameterValue(memory, instrPtr, 1);
-            int outputArg = GetOutPtr(memory, instrPtr, 2);
+            long arg1 = GetParameterValue(memory, instrPtr, 0);
+            long arg2 = GetParameterValue(memory, instrPtr, 1);
+            long outputArg = GetOutPtr(memory, instrPtr, 2);
             
-            int output = arg1 < arg2 ? 1 : 0;
+            long output = arg1 < arg2 ? 1 : 0;
 
             memory[outputArg] = output;
         }
 
-        private void Eq(int[] memory, int instrPtr, out int instructionLength)
+        private void Eq(long[] memory, long instrPtr, out int instructionLength)
         {
             instructionLength = 4;
-            int arg1 = GetParameterValue(memory, instrPtr, 0);
-            int arg2 = GetParameterValue(memory, instrPtr, 1);
-            int outputArg = GetOutPtr(memory, instrPtr, 2);
+            long arg1 = GetParameterValue(memory, instrPtr, 0);
+            long arg2 = GetParameterValue(memory, instrPtr, 1);
+            long outputArg = GetOutPtr(memory, instrPtr, 2);
             
             int output = arg1 == arg2 ? 1 : 0;
 
             memory[outputArg] = output;
         }
 
-        private void Rel(int[] memory, int instrPtr, out int instructionLength)
+        private void Rel(long[] memory, long instrPtr, out int instructionLength)
         {
             instructionLength = 2;
-            int arg = GetParameterValue(memory, instrPtr, 0);
+            int arg = (int)GetParameterValue(memory, instrPtr, 0);
             relativeBase += arg;
         }
 
-        private int GetOpCode(int fullCode) => fullCode % 100;
-        private int GetParameterMode(int fullCode, int parameterIdx)
+        private int GetOpCode(long fullCode) => (int)(fullCode % 100);
+        private int GetParameterMode(long fullCode, int parameterIdx)
         {
             double shift = (100 * Math.Pow(10, parameterIdx));
             return (int)((fullCode / shift) % 10);
         }
 
-        private int GetOutPtr(int[] memory, int instrPtr, int parameterIdx)
+        private long GetOutPtr(long[] memory, long instrPtr, int parameterIdx)
         {
-            int opCode = memory[instrPtr];
-            int parameter = memory[instrPtr + parameterIdx + 1];
+            long opCode = memory[instrPtr];
+            long parameter = memory[instrPtr + parameterIdx + 1];
             int parameterMode = GetParameterMode(opCode, parameterIdx);
 
             if (parameterMode == 0) return parameter;
@@ -179,11 +179,11 @@ namespace AOC2019
             else throw new Exception($"Unknown parameter mode: {parameterMode}");
         }
 
-        private int GetParameterValue(int[] memory, int instrPtr, int parameterIdx)
+        private long GetParameterValue(long[] memory, long instrPtr, int parameterIdx)
         {
-            int opCode = memory[instrPtr];
+            long opCode = memory[instrPtr];
             int parameterMode = GetParameterMode(opCode, parameterIdx);
-            int parameter = memory[instrPtr + 1 + parameterIdx];
+            long parameter = memory[instrPtr + 1 + parameterIdx];
 
             if (parameterMode == 1) return parameter;
             if (parameterMode == 0) return memory[parameter];
@@ -194,6 +194,6 @@ namespace AOC2019
 
     public static class ArrayExtensions
     {
-        public static string Print(this int[] arr) => string.Join(',', arr);
+        public static string Print(this long[] arr) => string.Join(',', arr);
     }
 }
