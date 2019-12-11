@@ -16,7 +16,7 @@ namespace AOC2019.Day09
                 .Concat(new long[1_000])
                 .ToArray();
 
-            var computer = new IntcodeComputer(() => 1L, Console.WriteLine);
+            var computer = new IntcodeComputer(() => 2L, Console.WriteLine);
             computer.Run(memory);
             // PrintPart1Example();
         }
