@@ -7,8 +7,8 @@ namespace AOC2019.Day09
 {
     class Program
     {
-        public static void Main(string[] args)
-        // public void Main(string[] args)
+        // public static void Main(string[] args)
+        public void Main(string[] args)
         {
             var memory = File.ReadAllText(@"Day09\input.txt")
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
