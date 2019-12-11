@@ -19,10 +19,12 @@ namespace AOC2019.Day11
                 .ToArray();
 
             Console.WriteLine("Running painter");
-            Console.WriteLine($"{RunPainter(memory)}  panels painted");
+            var panels = RunPainter(memory);
+            Console.WriteLine($"{panels.Keys.Count}  panels painted");
+            PrintGrid(panels);
         }
 
-        static int RunPainter(long[] memory)
+        static Dictionary<Point, Colour> RunPainter(long[] memory)
         {
             var painterInput = new BlockingCollection<long>();
             var painterOutput = new BlockingCollection<long>();
@@ -41,7 +43,29 @@ namespace AOC2019.Day11
 
             painterThread.Join();
 
-            return painter.Panels.Keys.Count;
+            return painter.Panels;
+        }
+        
+        static void PrintGrid(Dictionary<Point, Colour> panels)
+        {
+            int[,] grid = new int [100, 100];
+            for (int x = 0; x < 100; x++)
+            {
+                for (int y = 0; y < 100; y++)
+                {
+                    var point = new Point(x - 50, y - 50);
+                    if (panels.TryGetValue(point, out Colour colour) 
+                        && colour == Colour.White)
+                    {
+                        Console.Write('#');
+                    }
+                    else
+                    {
+                        Console.Write(' ');
+                    }
+                }
+                Console.WriteLine();
+            }
         }
     }
 
@@ -58,6 +82,7 @@ namespace AOC2019.Day11
         {
             this.input = input;
             this.output = output;
+            panels[position] = Colour.White;
         }
 
         public Dictionary<Point, Colour> Panels => panels;
