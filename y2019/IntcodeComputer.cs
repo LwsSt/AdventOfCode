@@ -23,6 +23,7 @@ namespace AOC2019
                 [6] = JIF,
                 [7] = LT,
                 [8] = Eq,
+                [9] = Rel,
             };
 
             this.readInput = input;
