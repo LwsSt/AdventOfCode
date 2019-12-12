@@ -8,7 +8,8 @@ namespace AOC2019.Day10
 {
     class Program
     {
-        public static void Main(string[] args)
+        // public static void Main(string[] args)
+        public void Main(string[] args)
         {
             var lines = File.ReadAllLines(@"Day10/input.txt");
             var asteroids = Parse(lines).ToHashSet();
