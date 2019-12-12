@@ -43,7 +43,62 @@ namespace AOC2019.Day12
 
         static IEnumerable<Planet[]> RunSimulation(Planet[] planets)
         {
-            return null;
+            while (true)
+            {
+                foreach (var (planet1, planet2) in GetPairs(planets))
+                {
+                    if (planet1.Position.X < planet2.Position.X)
+                    {
+                        planet1.Position.X += 1;
+                        planet2.Position.X -= 1;
+                    }
+                    else if (planet1.Position.X > planet2.Position.X)
+                    {
+                        planet1.Position.X -= 1;
+                        planet2.Position.X += 1;
+                    }
+
+                    if (planet1.Position.Y < planet2.Position.Y)
+                    {
+                        planet1.Position.Y += 1;
+                        planet2.Position.Y -= 1;
+                    }
+                    else if (planet1.Position.Y > planet2.Position.Y)
+                    {
+                        planet1.Position.Y -= 1;
+                        planet2.Position.Y += 1;
+                    }
+
+                    if (planet1.Position.Z < planet2.Position.Z)
+                    {
+                        planet1.Position.Z += 1;
+                        planet2.Position.Z -= 1;
+                    }
+                    else if (planet1.Position.Z > planet2.Position.Z)
+                    {
+                        planet1.Position.Z -= 1;
+                        planet2.Position.Z += 1;
+                    }
+                }
+
+                foreach (var planet in planets)
+                {
+                    planet.AddVelocity();
+                }
+
+                yield return planets;
+            }
+
+            IEnumerable<(Planet, Planet)> GetPairs(Planet[] ps)
+            {
+                for (int i = 0; i < ps.Length; i++)
+                {
+                    for (int j = i + 1; j < ps.Length; j++)
+                    {
+                        yield return (ps[i], ps[j]);
+                    }
+                }
+            }
         }
     }
 
@@ -54,11 +109,26 @@ namespace AOC2019.Day12
             Position = new Vector(x, y, z);
             Velocity = new Vector(0, 0, 0);
         }
+
+        public Planet(Vector position, Vector velocity)
+        {
+            Position = position;
+            Velocity = velocity;
+        }
+
+        public void AddVelocity()
+        {
+            Position.X += Velocity.X;
+            Position.Y += Velocity.Y;
+            Position.Z += Velocity.Z;
+        }
         
         public Vector Position { get; }
         public Vector Velocity { get; }
 
-        public override string ToString() => $"Planet()";
+        public override string ToString() => $"Planet(Pos:{Position}, Pos:{Velocity})";
+
+        public Planet Copy() => new Planet(Position.Copy(), Velocity.Copy());
     }
 
     class Vector
@@ -70,10 +140,12 @@ namespace AOC2019.Day12
             Z = z;
         }
 
-        public int X { get; }
-        public int Y { get; }
-        public int Z { get; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
 
         public override string ToString() => $"({X},{Y},{Z})";
+
+        public Vector Copy() => new Vector(X, Y, Z);
     }
 }
