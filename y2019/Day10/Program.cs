@@ -10,13 +10,18 @@ namespace AOC2019.Day10
     {
         public static void Main(string[] args)
         {
-            // var lines = File.ReadAllLines(@"Day10/input.txt");
-            // var asteriods = Parse(lines).ToHashSet();
+            var lines = File.ReadAllLines(@"Day10/input.txt");
+            var asteroids = Parse(lines).ToHashSet();
             
-            // var asteroid = Process(asteriods);
-            // Console.WriteLine($"");
+            var origin = FindBestAsteroid(asteroids).Key;
+            
+            Console.WriteLine("Best asteroid: {0}", origin);
+            var targetAsteroid = SpinLaser(asteroids.Where(a => a != origin), origin);
+            
+            Console.WriteLine("200th Asteroid: {0}", targetAsteroid);
 
-            PrintPart1Examples();
+            //PrintPart1Examples();
+            // PrintPart2Examples();
         }
 
         static IEnumerable<Asteroid> Parse(string[] lines)
@@ -39,11 +44,69 @@ namespace AOC2019.Day10
             foreach (var test in Test.Tests)
             {
                 var asteriods = Parse(test);
-                Console.WriteLine($"Max asteroids: {0}", Process(asteriods));
+                Console.WriteLine($"Max asteroids: {0}", FindBestAsteroid(asteriods).Value);
             }
         }
 
-        static int Process(IEnumerable<Asteroid> asteroids)
+        static void PrintPart2Examples()
+        {
+            var test = Test.Tests.Last();
+            var asteroids = Parse(test).ToList();
+            var origin = FindBestAsteroid(asteroids).Key;
+
+            Console.WriteLine("Best asteroid: {0}", origin);
+            var targetAsteroid = SpinLaser(asteroids.Where(a => a != origin), origin);
+            
+            Console.WriteLine("200th Asteroid: {0}", targetAsteroid);
+        }
+
+        static Asteroid SpinLaser(IEnumerable<Asteroid> input, Asteroid origin)
+        {
+            var relativeAsteroids = input
+                .Select(a => new Asteroid(a.X - origin.X, a.Y - origin.Y))
+                .GroupBy(a => Normalize(a));
+
+            var sortedAsteroids = new SortedDictionary<double, Queue<Asteroid>>();
+            foreach (var asteroid in relativeAsteroids)
+            {
+                var asteroidsByDistance = asteroid.OrderByDescending(Distance).ToList();
+                sortedAsteroids.Add(asteroid.Key, new Queue<Asteroid>(asteroidsByDistance));
+            }
+
+            int asteroidCount = 1;
+
+            while (sortedAsteroids.Any(kvp => kvp.Value.Count > 0))
+            {
+                foreach (var (_, asteroids) in sortedAsteroids)
+                {
+                    if (asteroids.TryDequeue(out Asteroid asteroid))
+                    {
+                        // Console.WriteLine("Asteroid {0,-3}: {1}", asteroidCount, new Asteroid(origin.X + asteroid.X, origin.Y + asteroid.Y));
+                        asteroidCount++;
+                        if (asteroidCount == 201)
+                        {
+                            return new Asteroid(origin.X + asteroid.X, origin.Y + asteroid.Y);
+                        }
+                    }
+                }
+            }
+                
+
+            return default;
+            
+            double Distance(Asteroid asteroid) => asteroid.X + asteroid.Y;
+            // double Distance(Asteroid asteroid) => Math.Sqrt(Math.Pow(asteroid.X, 2) + Math.Pow(asteroid.Y, 2));
+            double Normalize(Asteroid asteroid) 
+            {
+                const double piOver2 = (Math.PI / 2);
+                const double twoPi = (Math.PI * 2);
+
+                double theta = piOver2 + Math.Atan2(asteroid.Y, asteroid.X);
+                return (theta < 0) ? (theta + twoPi) : theta;
+            }
+        }
+
+        static KeyValuePair<Asteroid, int> FindBestAsteroid(IEnumerable<Asteroid> asteroids)
         {
             var asteroidCount = new Dictionary<Asteroid, int>();
             foreach (var origin in asteroids)
@@ -54,7 +117,7 @@ namespace AOC2019.Day10
                     .GroupBy(a => Math.Atan2(a.Y, a.X))
                     .Count();
 
-                asteroidCount.Add(origin, uniqueAngles);
+                asteroidCount[origin] = uniqueAngles;
 
                 // foreach (var (_, grouped) in relativeAsteroids)
                 // {
@@ -64,7 +127,7 @@ namespace AOC2019.Day10
                 // double Distance(Asteroid asteroid) => Math.Sqrt(Math.Pow(asteroid.X, 2) + Math.Pow(asteroid.Y, 2));
             }
 
-            var angles = asteroidCount.Select(kvp => kvp.Value).ToHashSet();
+            return asteroidCount.OrderByDescending(kvp => kvp.Value).First();
         }
     }
 
@@ -91,21 +154,6 @@ namespace AOC2019.Day10
         public static bool operator ==(Asteroid a, Asteroid b) => a.Equals(b);
 
         public static bool operator !=(Asteroid a, Asteroid b) => !(a.Equals(b));
-    }
-
-    static class Extensions
-    {
-        public static void AddOrUpdate(this Dictionary<double, List<Asteroid>> dict, double angle, Asteroid asteroid)
-        {
-            if (dict.TryGetValue(angle, out List<Asteroid> asteroids))
-            {
-                asteroids.Add(asteroid);
-            }
-            else
-            {
-                dict.Add(angle, new List<Asteroid>() { asteroid });
-            }
-        }
     }
 
     static class Test
