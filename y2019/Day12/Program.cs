@@ -21,10 +21,24 @@ namespace AOC2019.Day12
 <x=4, y=-8, z=8>
 <x=3, y=5, z=-1>";
 
-            var planets = Parse(input);
-            foreach (var planet in planets)
+            // var planets = Parse(input).ToArray();
+            // var simulation = RunSimulation(planets).Take(11);
+            // foreach (var step in simulation)
+            // {
+            //     Console.WriteLine("Step");
+            //     foreach (var planet in step)
+            //     {
+            //         Console.WriteLine(planet);
+            //     }
+
+            //     Console.WriteLine("Total Energy {0}", CalculateTotalEnergy(step));
+            //     Console.WriteLine();
+            // }
+
+            var afterStep99 = RunSimulation(Parse(input).ToArray()).Skip(99).Take(4);
+            foreach (var step in afterStep99)
             {
-                Console.WriteLine(planet);
+                Console.WriteLine("Total Energy {0, -5}", CalculateTotalEnergy(step));
             }
         }
 
@@ -41,43 +55,57 @@ namespace AOC2019.Day12
             }
         }
 
+        static int CalculateTotalEnergy(IEnumerable<Planet> planets)
+        {
+            return planets.Select(CalculateForPlanet).Sum();
+
+            int CalculateForPlanet(Planet planet)
+            {
+                int potEnergy = Math.Abs(planet.Position.X) + Math.Abs(planet.Position.Y) + Math.Abs(planet.Position.Z);
+                int kinEnergy = Math.Abs(planet.Velocity.X) + Math.Abs(planet.Velocity.Y) + Math.Abs(planet.Velocity.Z);
+
+                return potEnergy * kinEnergy;
+            }
+        }
+
         static IEnumerable<Planet[]> RunSimulation(Planet[] planets)
         {
+            yield return planets;
             while (true)
             {
                 foreach (var (planet1, planet2) in GetPairs(planets))
                 {
                     if (planet1.Position.X < planet2.Position.X)
                     {
-                        planet1.Position.X += 1;
-                        planet2.Position.X -= 1;
+                        planet1.Velocity.X += 1;
+                        planet2.Velocity.X -= 1;
                     }
                     else if (planet1.Position.X > planet2.Position.X)
                     {
-                        planet1.Position.X -= 1;
-                        planet2.Position.X += 1;
+                        planet1.Velocity.X -= 1;
+                        planet2.Velocity.X += 1;
                     }
 
                     if (planet1.Position.Y < planet2.Position.Y)
                     {
-                        planet1.Position.Y += 1;
-                        planet2.Position.Y -= 1;
+                        planet1.Velocity.Y += 1;
+                        planet2.Velocity.Y -= 1;
                     }
                     else if (planet1.Position.Y > planet2.Position.Y)
                     {
-                        planet1.Position.Y -= 1;
-                        planet2.Position.Y += 1;
+                        planet1.Velocity.Y -= 1;
+                        planet2.Velocity.Y += 1;
                     }
 
                     if (planet1.Position.Z < planet2.Position.Z)
                     {
-                        planet1.Position.Z += 1;
-                        planet2.Position.Z -= 1;
+                        planet1.Velocity.Z += 1;
+                        planet2.Velocity.Z -= 1;
                     }
                     else if (planet1.Position.Z > planet2.Position.Z)
                     {
-                        planet1.Position.Z -= 1;
-                        planet2.Position.Z += 1;
+                        planet1.Velocity.Z -= 1;
+                        planet2.Velocity.Z += 1;
                     }
                 }
 
@@ -126,9 +154,7 @@ namespace AOC2019.Day12
         public Vector Position { get; }
         public Vector Velocity { get; }
 
-        public override string ToString() => $"Planet(Pos:{Position}, Pos:{Velocity})";
-
-        public Planet Copy() => new Planet(Position.Copy(), Velocity.Copy());
+        public override string ToString() => $"Planet(Pos:{Position}, Vel:{Velocity})";
     }
 
     class Vector
@@ -145,7 +171,5 @@ namespace AOC2019.Day12
         public int Z { get; set; }
 
         public override string ToString() => $"({X},{Y},{Z})";
-
-        public Vector Copy() => new Vector(X, Y, Z);
     }
 }
