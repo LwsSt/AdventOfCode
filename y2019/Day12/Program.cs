@@ -11,12 +11,19 @@ namespace AOC2019.Day12
     {
         public static void Main(string[] args)
         {
-            PrintPart1Examples();
+            string input = File.ReadAllText(@"Day12\input.txt");
+            var planets = Parse(input).ToArray();
+            
+            Console.WriteLine("Running simulation...");
+            var step = RunSimulation(planets).Skip(999).First();
+            Console.WriteLine("Total energy {0}", CalculateTotalEnergy(step));
+
+            // PrintPart1Examples();
         }
 
         static void PrintPart1Examples()
         {
-            string input = @"<x=-1, y=0, z=2>
+            string input1 = @"<x=-1, y=0, z=2>
 <x=2, y=-10, z=-7>
 <x=4, y=-8, z=8>
 <x=3, y=5, z=-1>";
@@ -35,7 +42,12 @@ namespace AOC2019.Day12
             //     Console.WriteLine();
             // }
 
-            var afterStep99 = RunSimulation(Parse(input).ToArray()).Skip(99).Take(4);
+            string input2 = @"<x=-8, y=-10, z=0>
+<x=5, y=5, z=10>
+<x=2, y=-7, z=3>
+<x=9, y=-8, z=-3>";
+
+            var afterStep99 = RunSimulation(Parse(input2).ToArray()).Skip(99).Take(4);
             foreach (var step in afterStep99)
             {
                 Console.WriteLine("Total Energy {0, -5}", CalculateTotalEnergy(step));
@@ -70,7 +82,6 @@ namespace AOC2019.Day12
 
         static IEnumerable<Planet[]> RunSimulation(Planet[] planets)
         {
-            yield return planets;
             while (true)
             {
                 foreach (var (planet1, planet2) in GetPairs(planets))
