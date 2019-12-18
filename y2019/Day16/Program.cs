@@ -10,15 +10,13 @@ namespace AOC2019.Day16
     {
         public static void Main(string[] args)
         {
-            PrintPart1Examples();
-            // PrintPart2Examples();
+            // PrintPart1Examples();
+            string text = File.ReadAllText(@"Day16\input.txt");
+            var input = text.ToCharArray().Select(c => c - '0').ToArray();
 
-            // string text = File.ReadAllText(@"Day16\input.txt");
-            // var input = text.ToCharArray().Select(c => c - '0').ToArray();
-
-            // Console.WriteLine("Calculating");
-            // var output = Iterate(input);
-            // Console.WriteLine("Result: {0}", string.Join("", output.Take(8)));
+            Console.WriteLine("Calculating");
+            var output = Iterate(input);
+            Console.WriteLine("Result: {0}", string.Join("", output.Take(8)));
         }
 
         static void PrintPart1Examples()
@@ -33,53 +31,32 @@ namespace AOC2019.Day16
             foreach (var test in testInput)
             {
                 var input = test.ToCharArray().Select(c => c - '0').ToArray();
-                Console.WriteLine("Calculating...");
-                Iterate(input);
-                Console.WriteLine("Input {0} Output {1}", test, string.Join("", input.Take(8)));
+                Console.WriteLine("Input {0} Output {1}", test, string.Join("", Iterate(input).Take(8)));
             }
         }
 
-        static void PrintPart2Examples()
-        {
-            var testInput = new[]
-            {
-                "03036732577212944063491565474664",
-                "02935109699940807407585447034323",
-                "03081770884921959731165446850517",
-            };
-
-            foreach (var test in testInput)
-            {
-                int messageOffset = int.Parse(test.Substring(0, 7));
-                
-                var input = string.Join("", Enumerable.Repeat(test, 10_000))
-                    .Select(c => c - '0').ToArray();
-
-                Console.WriteLine("Calculating...");
-                Iterate(input);
-                Console.WriteLine(string.Join("", input.Skip(messageOffset).Take(8)));
-            }
-        }
-
-        static void Iterate(int[] input)
+        static int[] Iterate(int[] input)
         {
             for (int i = 0; i < 100; i++)
             {
-                // Console.WriteLine(string.Join("", input));
-                CalculateNextStep(input);
+                input = CalculateNextStep(input);
             }
+
+            return input;
         }
 
-        static void CalculateNextStep(int[] input)
+        static int[] CalculateNextStep(int[] numbers)
         {
-            for (int idx = input.Length - 1; idx >= 0 ; idx--)
-            {
-                if (idx == input.Length - 1)
-                {
-                    continue;
-                }
+            return CalculateNextStepImpl().ToArray();
 
-                input[idx] = (input[idx] + input[idx + 1]) % 10;
+            IEnumerable<int> CalculateNextStepImpl()
+            {
+                for (int i = 0; i < numbers.Length; i++)
+                {
+                    IEnumerable<int> pattern = GetPattern(i);
+                    int sum = numbers.Zip(pattern, (a, b) => a * b).Sum();
+                    yield return Math.Abs(sum) % 10;
+                }
             }
         }
 
