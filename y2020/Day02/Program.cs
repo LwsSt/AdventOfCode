@@ -27,6 +27,7 @@ namespace AOC2020.Day02
                 .ToList();
 
             Part1(lines);
+            Part2(lines);
         }
 
         public static void Part1(IEnumerable<PasswordLine> lines)
@@ -38,6 +39,15 @@ namespace AOC2020.Day02
                     return pl.Min <= characters && characters <= pl.Max;
                 })
                 .Count();
+            Console.WriteLine(validPasswords);
+        }
+
+        public static void Part2(IEnumerable<PasswordLine> lines)
+        {
+            int validPasswords = lines
+                .Where(pl => pl.Password[pl.Min - 1] == pl.Character ^ pl.Password[pl.Max - 1] == pl.Character)
+                .Count();
+
             Console.WriteLine(validPasswords);
         }
     }
