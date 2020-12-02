@@ -7,7 +7,7 @@ namespace AOC2020.Day01
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public void Main(string[] args)
         {
             var costs = File.ReadAllLines(@"Day01\input.txt")
                 .Select(l => int.Parse(l))
