@@ -16,21 +16,29 @@ namespace AOC2020.Day03
 
         public static void Part1(Space[,] map)
         {
+            int trees = TraverseSlope(map, 1, 3);
+
+            Console.WriteLine(trees);
+        }
+
+        public static int TraverseSlope(Space[,] map, int heigthDiff, int widthDiff)
+        {
             int trees = 0;
+            int heigth = map.GetLength(0);
             int width = map.GetLength(1);
             int w = 0;
-            for (int h = 0; h < map.GetLength(0); h++)
+            for (int h = 0; h < heigth; h += heigthDiff)
             {
                 if (map[h,w] == Space.Tree)
                 {
                     trees++;
                 }
 
-                w += 3;
+                w += widthDiff;
                 w %= width;
             }
 
-            Console.WriteLine(trees);
+            return trees;
         }
 
         public static Space[,] ParseInput()
