@@ -10,7 +10,7 @@ namespace AOC2020.Day02
     {
         const string LinePattern = @"(\d+)-(\d+) (\w): (\w+)";
 
-        public static void Main(string[] args)
+        public void Main(string[] args)
         {
             var regex = new Regex(LinePattern, RegexOptions.Compiled);
 
