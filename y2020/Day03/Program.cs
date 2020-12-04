@@ -8,7 +8,7 @@ namespace AOC2020.Day03
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public void Main(string[] args)
         {
             var map = ParseInput();
             Part1(map);
