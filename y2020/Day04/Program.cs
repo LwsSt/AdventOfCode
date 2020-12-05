@@ -12,7 +12,7 @@ namespace AOC2020.Day04
         private static readonly Regex hairColorRegex = new Regex(@"^#[0-9a-f]{6}$", RegexOptions.Compiled);
         private static readonly Regex passportIdRegex = new Regex(@"^\d{9}$", RegexOptions.Compiled);
         private static readonly HashSet<string> validEyeColors = new HashSet<string>(){"amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
-        public static void Main(string[] args)
+        public void Main(string[] args)
         {
             var passportData = ParseInput().Select(data => new Passport(data)).ToList();
             Part1(passportData);
