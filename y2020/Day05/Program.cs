@@ -16,6 +16,21 @@ namespace AOC2020.Day05
             // var funcs = new[] { getLower, getUpper };
             // var f = funcs.Aggregate((f, g) => r => g(f(r)));
             Part1();
+            Part2();
+        }
+
+        public static void Part2()
+        {
+            var ids = GetSeatIDs().ToList();
+            int max = ids.Max();
+            int min = ids.Min();
+            var fullRange = Enumerable.Range(min, max - min);
+
+            var missingIds = fullRange.Except(ids);
+            foreach (var id in missingIds)
+            {
+                Console.WriteLine(id);
+            }
         }
 
         public static void Part1()
