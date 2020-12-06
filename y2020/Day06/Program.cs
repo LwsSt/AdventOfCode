@@ -10,6 +10,7 @@ namespace AOC2020.Day06
         public static void Main()
         {
             Part1();
+            Part2();
         }
 
         public static void Part1()
@@ -17,6 +18,16 @@ namespace AOC2020.Day06
             int sum = ParseInput()
                 .Select(s => s.SelectMany(c => c).ToHashSet())
                 .Sum(r => r.Count);
+
+            Console.WriteLine(sum);
+        }
+
+        public static void Part2()
+        {
+            int sum = ParseInput()
+                .Select(ls => ls.Aggregate((l1, l2) => l1.Intersect(l2).ToArray()))
+                .Select(r => r.Count())
+                .Sum();
 
             Console.WriteLine(sum);
         }
@@ -33,6 +44,7 @@ namespace AOC2020.Day06
                 {
                     yield return responses;
                     responses = new List<char[]>();
+                    continue;
                 }
 
                 responses.Add(line.ToCharArray());
