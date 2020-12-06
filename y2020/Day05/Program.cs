@@ -11,7 +11,7 @@ namespace AOC2020.Day05
         private static readonly Func<Range, Range> getLower = r => r.GetLowerRange();
         private static readonly Func<Range, Range> getUpper = r => r.GetUpperRange();
 
-        public static void Main()
+        public void Main()
         {
             // var funcs = new[] { getLower, getUpper };
             // var f = funcs.Aggregate((f, g) => r => g(f(r)));
