@@ -15,15 +15,16 @@ namespace AOC2020.Day06
         public static void Part1()
         {
             int sum = ParseInput()
+                .Select(s => s.SelectMany(c => c).ToHashSet())
                 .Sum(r => r.Count);
 
             Console.WriteLine(sum);
         }
 
-        public static IEnumerable<HashSet<char>> ParseInput()
+        public static IEnumerable<List<char[]>> ParseInput()
         {
             var reader = File.OpenText(@"Day06\input.txt");
-            var responses = new HashSet<char>();
+            var responses = new List<char[]>();
             while(!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
@@ -31,13 +32,10 @@ namespace AOC2020.Day06
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     yield return responses;
-                    responses = new HashSet<char>();
+                    responses = new List<char[]>();
                 }
 
-                foreach (var @char in line)
-                {
-                    responses.Add(@char);
-                }
+                responses.Add(line.ToCharArray());
             }
 
             if (responses.Count > 0)
