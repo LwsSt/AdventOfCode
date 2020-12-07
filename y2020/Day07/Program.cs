@@ -14,12 +14,13 @@ namespace AOC2020.Day07
         private static readonly Regex innerBagREgex = new Regex(@"(\d+) (\w+ \w+) bags?", RegexOptions.Compiled);
         public static void Main()
         {
-            var graph = CreateGraph();
-            Part1(graph);
+            Part1();
+            Part2();
         }
 
-        public static void Part1(AdjacencyGraph<string, TaggedEdge<string, int>> graph)
+        public static void Part1()
         {
+            var graph = CreateGraphPart1();
             int count = GetContainingBags("shiny gold")
                 .Distinct()
                 .Count();
@@ -31,19 +32,58 @@ namespace AOC2020.Day07
                 var edges = graph.OutEdges(targetBag);
                 foreach (var edge in edges)
                 {
-                    // Console.WriteLine(edge.Target);
                     yield return edge.Target;
                     var innerBags = GetContainingBags(edge.Target);
                     foreach (var bag in innerBags)
                     {
-                        // Console.WriteLine(bag);
                         yield return bag;
                     }
                 }
             }
         }
 
-        public static AdjacencyGraph<string, TaggedEdge<string, int>> CreateGraph()
+        public static void Part2()
+        {
+            var graph = CreateGraphPart2();
+            int sum = GetContainingBags("shiny gold", 1)
+                .Select(kvp => kvp.amount)
+                .Sum();
+            Console.WriteLine(sum);
+
+            IEnumerable<(int amount, string name)> GetContainingBags(string targetBag, int amount)
+            {
+                var edges = graph.OutEdges(targetBag);
+                int sum = edges.Select(e => e.Tag).Sum();
+                yield return (sum * amount, targetBag);
+                foreach (var edge in edges)
+                {
+                    foreach (var bag in GetContainingBags(edge.Target, edge.Tag * amount))
+                    {
+                        yield return bag;
+                    }
+                }
+            }
+        }
+
+        public static AdjacencyGraph<string, TaggedEdge<string, int>> CreateGraphPart2()
+        {
+            var graph = new AdjacencyGraph<string, TaggedEdge<string, int>>();
+
+            foreach (var rule in ParseInput())
+            {
+                string name = rule.Name;
+                graph.AddVertex(name);
+                foreach (var (innerName, amount) in rule.InnerBags)
+                {
+                    graph.AddVertex(innerName);
+                    graph.AddEdge(new TaggedEdge<string, int>(name, innerName, amount));
+                }
+            }
+
+            return graph;
+        }
+
+        public static AdjacencyGraph<string, TaggedEdge<string, int>> CreateGraphPart1()
         {
             var graph = new AdjacencyGraph<string, TaggedEdge<string, int>>();
 
@@ -55,7 +95,6 @@ namespace AOC2020.Day07
                 {
                     graph.AddVertex(innerName);
                     graph.AddEdge(new TaggedEdge<string, int>(innerName, name, amount));
-                    // Console.WriteLine("{0} -{1}-> {2}", innerName, amount, name);
                 }
             }
 
