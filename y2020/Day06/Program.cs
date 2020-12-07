@@ -7,7 +7,7 @@ namespace AOC2020.Day06
 {
     public class Program
     {
-        public static void Main()
+        public void Main()
         {
             Part1();
             Part2();
