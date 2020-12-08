@@ -16,14 +16,21 @@ namespace AOC2020.Day08
 
         public static void Part1(List<Instruction> instructions)
         {
+            var (accumulator, _) = RunProgram(instructions);
+
+            Console.WriteLine(accumulator);
+        }
+
+        public static (int accumulator, bool terminated) RunProgram(List<Instruction> instructions)
+        {
             int pointer = 0;
             int accumulator = 0;
             var visitedInstructions = new HashSet<Instruction>();
 
-            while(visitedInstructions.Add(instructions[pointer]))
+            while(pointer < instructions.Count && visitedInstructions.Add(instructions[pointer]))
             {
-                Console.Write("{0, 3}  ", pointer);
-                Console.WriteLine(instructions[pointer]);
+                // Console.Write("{0, 3}  ", pointer);
+                // Console.WriteLine(instructions[pointer]);
                 switch (instructions[pointer].Op)
                 {
                     case Operation.Nop:
@@ -40,8 +47,8 @@ namespace AOC2020.Day08
                         throw new Exception("Invalid Operation");
                 }
             }
-
-            Console.WriteLine(accumulator);
+            
+            return (accumulator, pointer >= instructions.Count);
         }
 
         public static List<Instruction> ParseInput()
