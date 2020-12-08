@@ -12,6 +12,7 @@ namespace AOC2020.Day08
         {
             var instructions = ParseInput();
             Part1(instructions);
+            Part2(instructions);
         }
 
         public static void Part1(List<Instruction> instructions)
@@ -19,6 +20,41 @@ namespace AOC2020.Day08
             var (accumulator, _) = RunProgram(instructions);
 
             Console.WriteLine(accumulator);
+        }
+
+        public static void Part2(List<Instruction> instructions)
+        {
+            for (int i = 0; i < instructions.Count; i++)
+            {
+                if (instructions[i].Op == Operation.Nop)
+                {
+                    instructions[i].Op = Operation.Jmp;
+                    var (acc, terminates) = RunProgram(instructions);
+                    if (terminates)
+                    {
+                        Console.WriteLine(acc);
+                        break;
+                    }
+                    else
+                    {
+                        instructions[i].Op = Operation.Nop;
+                    }
+                }
+                else if (instructions[i].Op == Operation.Jmp)
+                {
+                    instructions[i].Op = Operation.Nop;
+                    var (acc, terminates) = RunProgram(instructions);
+                    if (terminates)
+                    {
+                        Console.WriteLine(acc);
+                        break;
+                    }
+                    else
+                    {
+                        instructions[i].Op = Operation.Jmp;
+                    }
+                }
+            }
         }
 
         public static (int accumulator, bool terminated) RunProgram(List<Instruction> instructions)
