@@ -12,7 +12,7 @@ namespace AOC2020.Day07
     {
         private static readonly Regex lineRegex = new Regex(@"(\w+ \w+) bags contain ([^.]*).", RegexOptions.Compiled);
         private static readonly Regex innerBagREgex = new Regex(@"(\d+) (\w+ \w+) bags?", RegexOptions.Compiled);
-        public static void Main()
+        public void Main()
         {
             Part1();
             Part2();
