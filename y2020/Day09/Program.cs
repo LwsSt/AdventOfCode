@@ -51,19 +51,15 @@ namespace AOC2020.Day09
 
         public static void Part2(List<long> input, long targetNum)
         {
-            int upper = input.IndexOf(targetNum);
-            upper--;
-
-            while(true)
+            int limit = input.IndexOf(targetNum);
+            
+            for (int lower = 0; lower < limit; lower++)
             {
                 long sum = 0;
-                // Console.WriteLine(input[first]);
-                int lower = upper;
-                for (; sum < targetNum; lower--)
+                int upper = lower;
+                for (; sum < targetNum; upper++)
                 {
-                    Console.WriteLine("ADD {0, 13}", input[lower]);
-                    sum += input[lower];
-                    Console.WriteLine("SUM {0, 13}", sum);
+                    sum += input[upper];
                 }
 
                 if (sum == targetNum)
@@ -72,10 +68,8 @@ namespace AOC2020.Day09
                     long min = range.Min();
                     long max = range.Max();
                     Console.WriteLine(min + max);
-                    return;
+                    break;
                 }
-                Console.WriteLine("Next Range");
-                upper--;
             }
         }
 
