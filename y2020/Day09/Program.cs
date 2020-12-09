@@ -13,26 +13,25 @@ namespace AOC2020.Day09
         public static void Main()
         {
             var input = ParseInput();
-            Part1(input);
+            long invalidNum = Part1(input);
+            Part2(input, invalidNum);
         }
 
-        public static void Part1(List<long> input)
+        public static long Part1(List<long> input)
         {
-            List<long> invalidNums = new List<long>();
+            long invalidNum = 0;
             for (int i = Preamble; i < input.Count; i++)
             {
                 long target = input[i];
                 var range = input.Skip(i - Preamble).Take(Preamble);
                 if (!TestRange(range, target))
                 {
-                    invalidNums.Add(target);
+                    invalidNum = target;
                 }
             }
 
-            foreach (var num in invalidNums)
-            {
-                Console.WriteLine(num);
-            }
+            Console.WriteLine(invalidNum);
+            return invalidNum;
 
             bool TestRange(IEnumerable<long> range, long target)
             {
@@ -47,6 +46,36 @@ namespace AOC2020.Day09
                 }
 
                 return false;
+            }
+        }
+
+        public static void Part2(List<long> input, long targetNum)
+        {
+            int upper = input.IndexOf(targetNum);
+            upper--;
+
+            while(true)
+            {
+                long sum = 0;
+                // Console.WriteLine(input[first]);
+                int lower = upper;
+                for (; sum < targetNum; lower--)
+                {
+                    Console.WriteLine("ADD {0, 13}", input[lower]);
+                    sum += input[lower];
+                    Console.WriteLine("SUM {0, 13}", sum);
+                }
+
+                if (sum == targetNum)
+                {
+                    var range = input.Skip(lower).Take(upper - lower).ToList();
+                    long min = range.Min();
+                    long max = range.Max();
+                    Console.WriteLine(min + max);
+                    return;
+                }
+                Console.WriteLine("Next Range");
+                upper--;
             }
         }
 
