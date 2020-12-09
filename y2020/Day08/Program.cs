@@ -8,7 +8,7 @@ namespace AOC2020.Day08
     public class Program
     {
         public const string FileName = "input.txt";
-        public static void Main()
+        public void Main()
         {
             var instructions = ParseInput();
             Part1(instructions);
