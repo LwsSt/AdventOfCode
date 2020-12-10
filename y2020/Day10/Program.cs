@@ -8,12 +8,12 @@ namespace AOC2020.Day10
     public class Program
     {
         public const string FileName = "input.txt";
-        public const int Preamble = 25;
 
         public static void Main()
         {
             var input = ParseInput();
             Part1(input);
+            Part2(input);
         }
 
         public static void Part1(List<int> input)
@@ -37,12 +37,31 @@ namespace AOC2020.Day10
                 yield return input[0];
                 for (int i = 0; i < input.Count - 1; i++)
                 {
-                    //Console.WriteLine(input[i + 1] - input[i]);
                     yield return input[i + 1] - input[i];
                 }
 
                 yield return 3;         
             }
+        }
+
+        public static void Part2(List<int> input)
+        {
+            input.Insert(0, 0);
+            Dictionary<int, long> sums = input.ToDictionary(i => i, _ => 0L);
+            sums[0] = 1;
+
+            for (int i = 1; i < input.Count; i++)
+            {
+                for (int j = 1; j <= 3; j++)
+                {
+                    if (sums.ContainsKey(input[i] - j))
+                    {
+                        sums[input[i]] += sums[input[i] - j];
+                    }
+                }
+            }
+
+            Console.WriteLine(sums[input[^1]]);
         }
 
         public static List<int> ParseInput()
