@@ -10,7 +10,7 @@ namespace AOC2020.Day09
         public const string FileName = "input.txt";
         public const int Preamble = 25;
 
-        public static void Main()
+        public void Main()
         {
             var input = ParseInput();
             long invalidNum = Part1(input);
