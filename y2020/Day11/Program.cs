@@ -19,8 +19,39 @@ namespace AOC2020.Day11
 
         public static void Part1(Space[,] floorPlan)
         {
+            int occupiedSeats = IterateSeatingPlan(floorPlan, CountOccupiedSeats);
+            Console.Write(occupiedSeats);
+            
+            int CountOccupiedSeats(int tWidth, int tHeight, Space[,] floorPlan)
+            {
+                int count = 0;
+                for (int w = tWidth - 1; w <= tWidth + 1; w++)
+                {
+                    for (int h = tHeight - 1; h <= tHeight + 1; h++)
+                    {
+                        if (0 <= w && w < floorPlan.GetLength(0) &&
+                            0 <= h && h < floorPlan.GetLength(1))
+                        {
+                            if (tHeight == h && tWidth == w)
+                            {
+                                continue;
+                            }
+
+                            if (floorPlan[w, h] == Space.Occupied)
+                            {
+                                count++;
+                            }
+                        }
+                    }
+                }
+                
+                return count;
+            }
+        }
+
+        public static int IterateSeatingPlan(Space[,] floorPlan, Func<int, int, Space[,], int> countOccupiedSeats)
+        {
             var comparer = new FloorplanComparer();
-            // PrintGrid(floorPlan);
 
             do 
             {
@@ -30,7 +61,7 @@ namespace AOC2020.Day11
                 {
                     for (int h = 0; h < floorPlan.GetLength(1); h++)
                     {
-                        int occupiedCount = CountOccupiedSeats(w, h, floorPlan);
+                        int occupiedCount = countOccupiedSeats(w, h, floorPlan);
                         
                         if (floorPlan[w, h] == Space.Occupied && occupiedCount >= 4)
                         {
@@ -44,11 +75,6 @@ namespace AOC2020.Day11
                     }
                 }
 
-                // Console.WriteLine("Original");
-                // PrintGrid(floorPlan);
-                // Console.WriteLine("Next");
-                // PrintGrid(nextPlan);
-
                 if (comparer.Equals(floorPlan, nextPlan))
                 {
                     break;
@@ -58,52 +84,7 @@ namespace AOC2020.Day11
             } while (true);
 
             int occupiedSeats = CountTotalOccupiedSeats(floorPlan);
-            Console.WriteLine(occupiedSeats);
-
-            int CountOccupiedSeats(int tWidth, int tHeight, Space[,] floorPlan)
-            {
-                // Console.WriteLine("Target ({0,2}, {1,2})", tWidth, tHeight);
-                int count = 0;
-                for (int w = tWidth - 1; w <= tWidth + 1; w++)
-                {
-                    for (int h = tHeight - 1; h <= tHeight + 1; h++)
-                    {
-                        // Console.WriteLine("\tChecking ({0,3}, {1, 3})", w, h);
-                        if (0 <= w && w < floorPlan.GetLength(0) &&
-                            0 <= h && h < floorPlan.GetLength(1))
-                        {
-                            if (tHeight == h && tWidth == w)
-                            {
-                                continue;
-                            }
-
-                            // Console.WriteLine("\t\t{0}", floorPlan[w, h].ToString());
-                            if (floorPlan[w, h] == Space.Occupied)
-                            {
-                                count++;
-                            }
-                        }
-                    }
-                }
-                
-                return count;
-            }
-
-            int CountTotalOccupiedSeats(Space[,] floorPlan)
-            {
-                int count = 0;
-                for (int w = 0; w < floorPlan.GetLength(0); w++)
-                {
-                    for (int h = 0; h < floorPlan.GetLength(1); h++)
-                    {
-                        if (floorPlan[w, h] == Space.Occupied)
-                        {
-                            count++;
-                        }
-                    }
-                }
-                return count;
-            }
+            return occupiedSeats;
         }
 
         public static Space[,] ParseInput()
@@ -123,6 +104,22 @@ namespace AOC2020.Day11
             }
 
             return floorPlan;
+        }
+
+        public static int CountTotalOccupiedSeats(Space[,] floorPlan)
+        {
+            int count = 0;
+            for (int w = 0; w < floorPlan.GetLength(0); w++)
+            {
+                for (int h = 0; h < floorPlan.GetLength(1); h++)
+                {
+                    if (floorPlan[w, h] == Space.Occupied)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
         }
 
         public static void PrintGrid(Space[,] floorPlan)
