@@ -10,7 +10,7 @@ namespace AOC2020.Day11
     {
         public const string FileName = "input.txt";
 
-        public static void Main()
+        public void Main()
         {
             var floorPlan = ParseInput();
             
