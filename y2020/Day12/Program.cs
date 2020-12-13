@@ -12,17 +12,23 @@ namespace AOC2020.Day12
         public static void Main()
         {
             var input = ParseInput();
-            Part1(input);
+            Part2(input);
         }
 
-        public static void Part1(List<Instruction> instructions)
+        public static void Part2(List<Instruction> instructions)
         {
             var boat = new Boat()
             {
                 X = 0,
                 Y = 0,
-                Direction = Direction.E
+                Waypoint = new Waypoint()
+                {
+                    X = 10,
+                    Y = 1
+                }
             };
+
+            // Console.WriteLine("Boat ({0,2}, {1,2}) Waypoint ({2,2}, {3,2})", boat.X, boat.Y, boat.Waypoint.X, boat.Waypoint.Y);
 
             foreach (var instruction in instructions)
             {
@@ -66,7 +72,13 @@ namespace AOC2020.Day12
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public Direction Direction { get; set; }
+        public Waypoint Waypoint { get; set; }
+    }
+
+    public class Waypoint
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 
     public abstract class Instruction
@@ -77,7 +89,7 @@ namespace AOC2020.Day12
         public void Execute(Boat boat)
         {
             ExecuteCore(boat);
-            Console.WriteLine("({0,2}, {1,2}) {2}", boat.X, boat.Y, boat.Direction);
+            // Console.WriteLine("Boat ({0,2}, {1,2}) Waypoint ({2,2}, {3,2})", boat.X, boat.Y, boat.Waypoint.X, boat.Waypoint.Y);
         }
         protected abstract void ExecuteCore(Boat boat);
 
@@ -92,25 +104,25 @@ namespace AOC2020.Day12
         private class North : Instruction
         {
             public North(int parameter) : base(parameter) { }
-            protected override void ExecuteCore(Boat boat) => boat.Y += Parameter;
+            protected override void ExecuteCore(Boat boat) => boat.Waypoint.Y += Parameter;
         }
 
         private class South : Instruction
         {
             public South(int parameter) : base(parameter) { }
-            protected override void ExecuteCore(Boat boat) => boat.Y -= Parameter;
+            protected override void ExecuteCore(Boat boat) => boat.Waypoint.Y -= Parameter;
         }
 
         private class East : Instruction
         {
             public East(int parameter) : base(parameter) { }
-            protected override void ExecuteCore(Boat boat) => boat.X += Parameter;
+            protected override void ExecuteCore(Boat boat) => boat.Waypoint.X += Parameter;
         }
 
         private class West : Instruction
         {
             public West(int parameter) : base(parameter) { }
-            protected override void ExecuteCore(Boat boat) => boat.X -= Parameter;
+            protected override void ExecuteCore(Boat boat) => boat.Waypoint.X -= Parameter;
         }
 
         private class Right : Instruction
@@ -118,11 +130,13 @@ namespace AOC2020.Day12
             public Right(int parameter) : base(parameter) { }
             protected override void ExecuteCore(Boat boat) 
             {
-                int turnAmount = Parameter / 90;
-                int direction = (int)boat.Direction;
-                direction += turnAmount;
-                direction %= 4;
-                boat.Direction = (Direction)direction;
+                double angle = (360 - Parameter) * (Math.PI / 180);
+                int x = boat.Waypoint.X;
+                int y = boat.Waypoint.Y;
+                int rotatedX = (int) Math.Round(x * Math.Cos(angle) - y * Math.Sin(angle));
+                int rotatedY = (int) Math.Round(x * Math.Sin(angle) + y * Math.Cos(angle));
+                boat.Waypoint.X = rotatedX;
+                boat.Waypoint.Y = rotatedY;
             }
         }
 
@@ -131,12 +145,13 @@ namespace AOC2020.Day12
             public Left(int parameter) : base(parameter) { }
             protected override void ExecuteCore(Boat boat) 
             {
-                int turnAmount = Parameter / 90;
-                int direction = (int)boat.Direction;
-                direction -= turnAmount;
-                direction += 4;
-                direction %= 4;
-                boat.Direction = (Direction)direction;
+                double angle = Parameter * (Math.PI / 180);
+                int x = boat.Waypoint.X;
+                int y = boat.Waypoint.Y;
+                int rotatedX = (int) Math.Round(x * Math.Cos(angle) - y * Math.Sin(angle));
+                int rotatedY = (int) Math.Round(x * Math.Sin(angle) + y * Math.Cos(angle));
+                boat.Waypoint.X = rotatedX;
+                boat.Waypoint.Y = rotatedY;
             }
         }
 
@@ -145,16 +160,8 @@ namespace AOC2020.Day12
             public Forward(int parameter) : base(parameter) { }
             protected override void ExecuteCore(Boat boat) 
             {
-                Instruction dir = boat.Direction switch 
-                {
-                    Direction.N => new North(Parameter),
-                    Direction.E => new East(Parameter),
-                    Direction.S => new South(Parameter),
-                    Direction.W => new West(Parameter),
-                    _ => throw new Exception($"Invalid Direction {boat.Direction}")
-                };
-
-                dir.Execute(boat);
+                boat.Y += boat.Waypoint.Y * Parameter;
+                boat.X += boat.Waypoint.X * Parameter;
             }
         }
     }

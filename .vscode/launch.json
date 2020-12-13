@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/y2020/bin/Debug/netcoreapp3.0/AOC2020.dll",
+            "program": "${workspaceFolder}/y2020/bin/Debug/net5.0/AOC2020.dll",
             "args": [],
             "cwd": "${workspaceFolder}/y2020",
             "console": "internalConsole",
