@@ -9,7 +9,7 @@ namespace AOC2020.Day12
     {
         public const string FileName = "input.txt";
 
-        public static void Main()
+        public void Main()
         {
             var input = ParseInput();
             Part2(input);
