@@ -12,7 +12,7 @@ namespace AOC2020.Day13
         private const int DepartureTime = 1001171;
         private static readonly int[] BusIDs = new[] {17,41,37,367,19,23,29,613,13 };
         
-        private static readonly int[] BusIDs_2 = new[] {7,-1,-1,-1,-1,-1,-1,41,-1,-1,-1,37,-1,-1,-1,-1,-1,367,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,19,-1,-1,-1,23,-1,-1,-1,-1,-1,29,-1,613,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,13 }
+        private static readonly int[] BusIDs_2 = new[] {7,-1,-1,-1,-1,-1,-1,41,-1,-1,-1,37,-1,-1,-1,-1,-1,367,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,19,-1,-1,-1,23,-1,-1,-1,-1,-1,29,-1,613,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,13 };
 
         private static readonly int[][] Tests = new int[][]
         {
@@ -37,6 +37,12 @@ namespace AOC2020.Day13
         public static void Main()
         {
             Part1();
+            for (int i = 0; i < Tests.Length; i++)
+            {
+                long actual = IterateBusRoutes(Tests[i]);
+                long expected = Test_Answers[i];
+                Console.WriteLine("Actual: {0}, Expected: {1}", actual, expected);
+            }
         }
 
         public static void Part1()
@@ -62,16 +68,35 @@ namespace AOC2020.Day13
 
         public static void Part2()
         {
-
+            long timestamp = IterateBusRoutes(BusIDs_2);
         }
 
         public static long IterateBusRoutes(int[] busIds)
         {
-            while(true)
+            long[] busTimes = new long[busIds.Length];
+
+            for (long timeStamp = 0; ; timeStamp++)
             {
+                bool found = true;
                 for (int i = 0; i < busIds.Length; i++)
                 {
-                    
+                    if (busIds[i] == -1) continue;
+                    if (timeStamp + i != busTimes[i])
+                    {
+                        found = false;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    return timeStamp;
+                }
+
+                for (int i = 0; i < busIds.Length; i++)
+                {
+                    if (busIds[i] == -1) continue;
+                    busTimes[i] += busIds[i];
                 }
             }
         }
