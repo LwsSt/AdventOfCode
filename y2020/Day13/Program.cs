@@ -16,11 +16,11 @@ namespace AOC2020.Day13
 
         private static readonly int[][] Tests = new int[][]
         {
-            new int[]{7,13,-1,-1,59,-1,31,19},
-            new int[]{17,-1,13,19},
+            new int[]{7,13,0,0,59,0,31,19},
+            new int[]{17,0,13,19},
             new int[]{67,7,59,61},
-            new int[]{67,-1,7,59,61},
-            new int[]{67,7,-1,59,61},
+            new int[]{67,0,7,59,61},
+            new int[]{67,7,0,59,61},
             new int[]{1789,37,47,1889}
         };
 
@@ -73,31 +73,8 @@ namespace AOC2020.Day13
 
         public static long IterateBusRoutes(int[] busIds)
         {
-            long[] busTimes = new long[busIds.Length];
-
-            for (long timeStamp = 0; ; timeStamp++)
+            for (long timestamp = 0; ; timestamp++)
             {
-                bool found = true;
-                for (int i = 0; i < busIds.Length; i++)
-                {
-                    if (busIds[i] == -1) continue;
-                    if (timeStamp + i != busTimes[i])
-                    {
-                        found = false;
-                        break;
-                    }
-                }
-
-                if (found)
-                {
-                    return timeStamp;
-                }
-
-                for (int i = 0; i < busIds.Length; i++)
-                {
-                    if (busIds[i] == -1) continue;
-                    busTimes[i] += busIds[i];
-                }
             }
         }
     }
