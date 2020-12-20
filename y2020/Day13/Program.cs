@@ -34,7 +34,7 @@ namespace AOC2020.Day13
             1202161486
         };
 
-        public static void Main()
+        public void Main()
         {
             Part1();
             for (int i = 0; i < Tests.Length; i++)
