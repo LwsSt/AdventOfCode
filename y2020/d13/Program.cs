@@ -1,11 +1,9 @@
 using System;
 using System.Linq;
-using System.IO;
-using System.Collections.Generic;
 
-namespace AOC2020.Day13
+namespace AdventOfCode.y2020.d13
 {
-    public class Program
+    public class Program : IPuzzle
     {
         // private const int DepartureTime = 939;
         // private static readonly int[] BusIDs = new[] { 7, 13, 59, 31, 19 };        
@@ -34,18 +32,7 @@ namespace AOC2020.Day13
             1202161486
         };
 
-        public void Main()
-        {
-            Part1();
-            for (int i = 0; i < Tests.Length; i++)
-            {
-                long actual = IterateBusRoutes(Tests[i]);
-                long expected = Test_Answers[i];
-                Console.WriteLine("Actual: {0}, Expected: {1}", actual, expected);
-            }
-        }
-
-        public static void Part1()
+        public void Part1()
         {
             var dictionary = BusIDs.ToDictionary(b => b, _ => 0);
             foreach (var id in dictionary.Keys.ToList())
@@ -66,7 +53,7 @@ namespace AOC2020.Day13
             Console.WriteLine(busId * shortestWaitTime);
         }
 
-        public static void Part2()
+        public void Part2()
         {
             long timestamp = IterateBusRoutes(BusIDs_2);
         }

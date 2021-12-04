@@ -5,21 +5,16 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text.RegularExpressions;
 
-namespace AOC2020.Day14
+namespace AdventOfCode.y2020.d14
 {
-    public class Program
+    public class Program : IPuzzle
     {
         private const string FileName = "input.txt";
 
         private static readonly Regex MemorySetRegex = new Regex(@"mem\[(?<address>\d+)\] = (?<value>\d+)", RegexOptions.Compiled);
         private static readonly Regex MaskSetRegex = new Regex(@"mask = (?<mask>[01X]+)", RegexOptions.Compiled);
 
-        public void Main()
-        {
-            Part1();
-        }
-
-        public static void Part1()
+        public void Part1()
         {
             var state = new State();
 
@@ -53,6 +48,11 @@ namespace AOC2020.Day14
 
             Console.WriteLine(state.SumMemory());
         }   
+
+        public void Part2()
+        {
+
+        }
     }
 
     public class State

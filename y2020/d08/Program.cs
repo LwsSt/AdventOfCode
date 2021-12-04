@@ -3,7 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
-namespace AOC2020.Day08
+namespace AdventOfCode.y2020.d08
 {
     public class Program
     {
@@ -93,7 +93,7 @@ namespace AOC2020.Day08
 
             IEnumerable<Instruction> Parse()
             {
-                foreach (var (line, idx) in File.ReadLines($"Day08\\{FileName}").Select((line, idx) => (line, idx)))
+                foreach (var (line, idx) in File.ReadLines(@"y2020\d08\input.puzzle").Select((line, idx) => (line, idx)))
                 {
                     var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                     var operation = GetOp(parts[0]);

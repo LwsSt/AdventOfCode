@@ -3,19 +3,23 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
-namespace AOC2020.Day12
+namespace AdventOfCode.y2020.d12
 {
-    public class Program
+    public class Program : IPuzzle
     {
-        public const string FileName = "input.txt";
+        private readonly List<Instruction> instructions;
 
-        public void Main()
+        public Program()
         {
             var input = ParseInput();
-            Part2(input);
         }
 
-        public static void Part2(List<Instruction> instructions)
+        public void Part1()
+        {
+
+        }
+
+        public void Part2()
         {
             var boat = new Boat()
             {
@@ -45,7 +49,7 @@ namespace AOC2020.Day12
 
             IEnumerable<Instruction> ParseInputImpl()
             {
-                foreach (var line in File.ReadLines($"Day12\\{FileName}"))
+                foreach (var line in File.ReadLines(@"y2020\d12\input.puzzle"))
                 {
                     char instruction = line[0];
                     int parameter = int.Parse(line.Substring(1));

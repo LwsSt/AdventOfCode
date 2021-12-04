@@ -1,28 +1,25 @@
 using System;
-using System.Linq;
 using System.IO;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
-namespace AOC2020.Day03
+namespace AdventOfCode.y2020.d03
 {
-    public class Program
+    public class Program : IPuzzle
     {
-        public void Main(string[] args)
+        private readonly Space[,] map;
+
+        public Program()
         {
-            var map = ParseInput();
-            Part1(map);
-            Part2(map);
+            map = ParseInput();
         }
 
-        public static void Part1(Space[,] map)
+        public void Part1()
         {
             int trees = TraverseSlope(map, 1, 3);
 
             Console.WriteLine(trees);
         }
 
-        public static void Part2(Space[,] map)
+        public void Part2()
         {
             int total = 1;
             var slopes = new[]
@@ -65,7 +62,7 @@ namespace AOC2020.Day03
 
         public static Space[,] ParseInput()
         {
-            var lines = File.ReadAllLines(@"Day03\input.txt");
+            var lines = File.ReadAllLines(@"y2020\d03\input.puzzle");
             int height = lines.Length;
             int width = lines[0].Length;
             var map = new Space[height, width];

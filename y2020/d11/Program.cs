@@ -4,20 +4,18 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace AOC2020.Day11
+namespace AdventOfCode.y2020.d11
 {
-    public class Program
+    public class Program : IPuzzle
     {
-        public const string FileName = "input.txt";
+        private readonly Space[,] floorPlan;
 
-        public void Main()
+        public Program()
         {
-            var floorPlan = ParseInput();
-            
-            Part1(floorPlan);
+            floorPlan = ParseInput();
         }
 
-        public static void Part1(Space[,] floorPlan)
+        public void Part1()
         {
             int occupiedSeats = IterateSeatingPlan(floorPlan, CountOccupiedSeats);
             Console.Write(occupiedSeats);
@@ -47,6 +45,11 @@ namespace AOC2020.Day11
                 
                 return count;
             }
+        }
+
+        public void Part2()
+        {
+            
         }
 
         public static int IterateSeatingPlan(Space[,] floorPlan, Func<int, int, Space[,], int> countOccupiedSeats)
@@ -89,7 +92,7 @@ namespace AOC2020.Day11
 
         public static Space[,] ParseInput()
         {
-            var lines = File.ReadAllLines($"Day11\\{FileName}");
+            var lines = File.ReadAllLines(@"y2020\d11\input.puzzle");
             int width = lines[0].Length;
             int height = lines.Length;
 

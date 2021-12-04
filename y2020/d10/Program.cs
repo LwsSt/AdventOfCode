@@ -3,20 +3,18 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
-namespace AOC2020.Day10
+namespace AdventOfCode.y2020.d10
 {
-    public class Program
+    public class Program : IPuzzle
     {
-        public const string FileName = "input.txt";
+        private readonly List<int> input;
 
-        public void Main()
+        public Program()
         {
-            var input = ParseInput();
-            Part1(input);
-            Part2(input);
+            input = ParseInput();
         }
 
-        public static void Part1(List<int> input)
+        public void Part1()
         {
             var differences = CalculateDifferences().ToList();
 
@@ -44,7 +42,7 @@ namespace AOC2020.Day10
             }
         }
 
-        public static void Part2(List<int> input)
+        public void Part2()
         {
             input.Insert(0, 0);
             Dictionary<int, long> sums = input.ToDictionary(i => i, _ => 0L);
@@ -64,9 +62,9 @@ namespace AOC2020.Day10
             Console.WriteLine(sums[input[^1]]);
         }
 
-        public static List<int> ParseInput()
+        public List<int> ParseInput()
         {
-            return File.ReadLines($"Day10\\{FileName}")
+            return File.ReadLines(@"y2020\d10\input.puzzle")
                 .Select(l => int.Parse(l))
                 .OrderBy(i => i)
                 .ToList();

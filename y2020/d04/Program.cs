@@ -4,22 +4,23 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace AOC2020.Day04
+namespace AdventOfCode.y2020.d04
 {
-    public class Program
+    public class Program : IPuzzle
     {
         private static readonly Regex passportRegex = new Regex(@"((?<key>\w{3}):(?<val>[#\w]+))\s+", RegexOptions.Compiled);
         private static readonly Regex hairColorRegex = new Regex(@"^#[0-9a-f]{6}$", RegexOptions.Compiled);
         private static readonly Regex passportIdRegex = new Regex(@"^\d{9}$", RegexOptions.Compiled);
         private static readonly HashSet<string> validEyeColors = new HashSet<string>(){"amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
-        public void Main(string[] args)
+
+        private readonly List<Passport> passports;
+
+        public Program()
         {
-            var passportData = ParseInput().Select(data => new Passport(data)).ToList();
-            Part1(passportData);
-            Part2(passportData);
+            passports = ParseInput().Select(data => new Passport(data)).ToList();
         }
 
-        public static void Part1(IEnumerable<Passport> passports)
+        public void Part1()
         {
             int validPassports = passports.Count(p => IsValid(p));
             Console.WriteLine(validPassports);
@@ -27,7 +28,7 @@ namespace AOC2020.Day04
             
         }
 
-        public static void Part2(IEnumerable<Passport> passports)
+        public void Part2()
         {
             var validPassports = passports
                 .Where(p => IsValid(p))
@@ -89,7 +90,7 @@ namespace AOC2020.Day04
 
         public static IEnumerable<Dictionary<string, string>> ParseInput()
         {
-            using var reader = File.OpenText(@"Day04\input.txt");
+            using var reader = File.OpenText(@"y2020\d04\input.puzzle");
             string line = null;
             while(!reader.EndOfStream)
             {

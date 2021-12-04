@@ -6,19 +6,14 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using QuikGraph;
 
-namespace AOC2020.Day07
+namespace AdventOfCode.y2020.d07
 {
     public class Program
     {
         private static readonly Regex lineRegex = new Regex(@"(\w+ \w+) bags contain ([^.]*).", RegexOptions.Compiled);
         private static readonly Regex innerBagREgex = new Regex(@"(\d+) (\w+ \w+) bags?", RegexOptions.Compiled);
-        public void Main()
-        {
-            Part1();
-            Part2();
-        }
 
-        public static void Part1()
+        public void Part1()
         {
             var graph = CreateGraphPart1();
             int count = GetContainingBags("shiny gold")
@@ -42,7 +37,7 @@ namespace AOC2020.Day07
             }
         }
 
-        public static void Part2()
+        public void Part2()
         {
             var graph = CreateGraphPart2();
             int sum = GetContainingBags("shiny gold", 1)

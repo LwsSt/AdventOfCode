@@ -4,17 +4,19 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace AOC2020.Day02
+namespace AdventOfCode.y2020.d02
 {
-    public class Program
+    public class Program : IPuzzle
     {
         const string LinePattern = @"(\d+)-(\d+) (\w): (\w+)";
 
-        public void Main(string[] args)
+        private readonly List<PasswordLine> lines;
+
+        public Program()
         {
             var regex = new Regex(LinePattern, RegexOptions.Compiled);
 
-            var lines = File.ReadAllLines(@"Day02\input.txt")
+            lines = File.ReadAllLines(@"y2020\d02\input.puzzle")
                 .Select(l => regex.Match(l))
                 .Where(m => m.Success)
                 .Select(m => new PasswordLine()
@@ -25,12 +27,9 @@ namespace AOC2020.Day02
                     Password = m.Groups[4].Value
                 })
                 .ToList();
-
-            Part1(lines);
-            Part2(lines);
         }
 
-        public static void Part1(IEnumerable<PasswordLine> lines)
+        public void Part1()
         {
             int validPasswords = lines
                 .Where(pl =>
@@ -42,7 +41,7 @@ namespace AOC2020.Day02
             Console.WriteLine(validPasswords);
         }
 
-        public static void Part2(IEnumerable<PasswordLine> lines)
+        public void Part2()
         {
             int validPasswords = lines
                 .Where(pl => pl.Password[pl.Min - 1] == pl.Character ^ pl.Password[pl.Max - 1] == pl.Character)

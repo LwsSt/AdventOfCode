@@ -4,22 +4,14 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace AOC2020.Day05
+namespace AdventOfCode.y2020.d05
 {
-    public class Program
+    public class Program : IPuzzle
     {
         private static readonly Func<Range, Range> getLower = r => r.GetLowerRange();
         private static readonly Func<Range, Range> getUpper = r => r.GetUpperRange();
 
-        public void Main()
-        {
-            // var funcs = new[] { getLower, getUpper };
-            // var f = funcs.Aggregate((f, g) => r => g(f(r)));
-            Part1();
-            Part2();
-        }
-
-        public static void Part2()
+        public void Part2()
         {
             var ids = GetSeatIDs().ToList();
             int max = ids.Max();
@@ -33,7 +25,7 @@ namespace AOC2020.Day05
             }
         }
 
-        public static void Part1()
+        public void Part1()
         {
             int max = GetSeatIDs().Max();
             Console.WriteLine(max);
@@ -54,7 +46,7 @@ namespace AOC2020.Day05
 
         public static IEnumerable<(Func<Range, Range> rows, Func<Range, Range> columns)> ParseInput()
         {
-            var lines = File.ReadLines(@"Day05\input.txt");
+            var lines = File.ReadLines(@"y2020\d05\input.puzzle");
             foreach (var line in lines)
             {
                 string rows = line.Substring(0, 7);

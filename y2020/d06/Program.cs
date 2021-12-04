@@ -3,17 +3,11 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
-namespace AOC2020.Day06
+namespace AdventOfCode.y2020.d06
 {
-    public class Program
+    public class Program : IPuzzle
     {
-        public void Main()
-        {
-            Part1();
-            Part2();
-        }
-
-        public static void Part1()
+        public void Part1()
         {
             int sum = ParseInput()
                 .Select(s => s.SelectMany(c => c).ToHashSet())
@@ -22,7 +16,7 @@ namespace AOC2020.Day06
             Console.WriteLine(sum);
         }
 
-        public static void Part2()
+        public void Part2()
         {
             int sum = ParseInput()
                 .Select(ls => ls.Aggregate((l1, l2) => l1.Intersect(l2).ToArray()))
