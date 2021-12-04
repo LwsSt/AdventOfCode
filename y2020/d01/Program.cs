@@ -2,21 +2,22 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using AdventOfCode;
 
-namespace AOC2020.Day01
+namespace AdventOfCode.y2020.d01
 {
-    public class Program
+    public class Program : IPuzzle
     {
-        public void Main(string[] args)
+        private readonly HashSet<int> costs;
+
+        public Program()
         {
-            var costs = File.ReadAllLines(@"Day01\input.txt")
+            costs = File.ReadAllLines(@"y2020\d01\input.puzzle")
                 .Select(l => int.Parse(l))
                 .ToHashSet();
-            Part1(costs);
-            Part2(costs);
         }
 
-        public static void Part1(HashSet<int> costs)
+        public void Part1()
         {
             foreach (int number_1 in costs)
             {
@@ -29,7 +30,7 @@ namespace AOC2020.Day01
             }
         }
 
-        public static void Part2(HashSet<int> costs)
+        public void Part2()
         {
             int max = costs.Max();
             int min = costs.Min();

@@ -14,7 +14,7 @@ namespace AOC2020.Day14
         private static readonly Regex MemorySetRegex = new Regex(@"mem\[(?<address>\d+)\] = (?<value>\d+)", RegexOptions.Compiled);
         private static readonly Regex MaskSetRegex = new Regex(@"mask = (?<mask>[01X]+)", RegexOptions.Compiled);
 
-        public static void Main()
+        public void Main()
         {
             Part1();
         }

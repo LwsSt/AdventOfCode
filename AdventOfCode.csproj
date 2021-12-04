@@ -6,10 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="**/*.txt" />
+    <Compile Remove="y2019/**.*" />
+    <Compile Remove="y2018/**.*" />
+    <Compile Remove="y2017/**.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="**/*.puzzle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="QuikGraph" Version="2.2.0" />
   </ItemGroup>
+
 </Project>
