@@ -8,12 +8,12 @@ namespace AdventOfCode.y2021.d03
 {
     public class Puzzle : IPuzzle
     {
-        private const int Length = 5;
+        private const int Length = 12;
         private readonly List<BitArray> input;
 
         public Puzzle()
         {
-            input = File.ReadLines(@"y2021/d03/test-input.puzzle")
+            input = File.ReadLines(@"y2021/d03/input.puzzle")
                 .Select(l => Convert.ToInt32(l, 2))
                 .Select(Create)
                 .ToList();
@@ -54,13 +54,59 @@ namespace AdventOfCode.y2021.d03
 
         public void Part2()
         {
+            var specimens = input;
+
+            for (int i = Length - 1; i >= 0 && specimens.Count > 1; i--)
+            {
+                specimens = Filter(specimens, i, true);
+            }
+
+            int oxygenRate = ToInt(specimens.First());
+
+            specimens = input;
+            for (int i = Length - 1; i >= 0 && specimens.Count > 1; i--)
+            {
+                specimens = Filter(specimens, i, false);
+            }
+
+            int co2Rate = ToInt(specimens.First());
+
+            Console.WriteLine(oxygenRate);
+            Console.WriteLine(co2Rate);
+
+            Console.WriteLine(oxygenRate * co2Rate);
+        }
+
+        private List<BitArray> Filter(List<BitArray> list, int position, bool getMostCommon)
+        {
+            int discriminant = (int)Math.Round((double)list.Count / 2, MidpointRounding.AwayFromZero);
+            int onesCount = list.Where(b => b[position]).Count();
+
+            bool mostCommon = false;
+
+            if (getMostCommon)
+            {
+                if (onesCount == discriminant)
+                    mostCommon = true;
+                else
+                    mostCommon = onesCount >= discriminant;
+            }
+            else
+            {
+                if (onesCount == discriminant)
+                    mostCommon = false;
+                else
+                    mostCommon = !(onesCount >= discriminant);
+            }
+
+            return list.Where(l => l[position] == mostCommon).ToList();
         }
 
         private static void Print(BitArray bit)
         {
-            foreach (var b in bit)
+            for (int i = bit.Length - 1; i >= 0 ; i--)
             {
-                Console.Write("{0:1;0;0}", b.GetHashCode());
+                Console.Write("{0:1;0;0}", bit[i].GetHashCode());
             }
 
             Console.WriteLine();
@@ -76,14 +122,9 @@ namespace AdventOfCode.y2021.d03
 
         private static BitArray Create(int input)
         {
-            var array = new BitArray(Length);
-
-            for (int i = 0; i < Length; i++)
-            {
-                array[i] = ((input >> i) & 1) == 1;
-            }
-
-            return array;
+            BitArray bitArray = new BitArray(new[] { input });
+            bitArray.Length = Length;
+            return bitArray;
         }
     }
 }
