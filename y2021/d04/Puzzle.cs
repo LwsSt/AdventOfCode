@@ -29,7 +29,7 @@ namespace AdventOfCode.y2021.d04
 
             foreach (var number in calledNumbers)
             {
-                foreach (var (board, idx) in boards.Select((b, i) => (b, i)))
+                foreach (var board in boards)
                 {
                     if (board.MarkNumber(number))
                     {
@@ -56,6 +56,41 @@ namespace AdventOfCode.y2021.d04
 
         public void Part2()
         {
+            int winningNumber = default;
+            Board winningBoard = default;
+
+            foreach (var number in calledNumbers)
+            {
+
+                for (int i = 0; i < boards.Count; i++)
+                {
+                    bool success = boards[i].MarkNumber(number);
+                    if (success && boards.Count == 1)
+                    {
+                        winningNumber = number;
+                        winningBoard = boards[0];
+                        goto Success;
+                    }
+                    else if (success)
+                    {
+                        Console.WriteLine(boards[i]);
+                        boards.RemoveAt(i);
+                        i--;
+                    }
+                    
+                }
+            }
+
+            Success:
+            if (winningBoard != null)
+            {
+                Console.WriteLine(winningBoard);
+                int sum = winningBoard.SumUnmarkedNumber();
+
+                Console.WriteLine(sum);
+                Console.WriteLine(winningNumber);
+                Console.WriteLine(sum * winningNumber);
+            }
         }
 
         private IEnumerable<Board> Parse(List<string> input)
@@ -118,7 +153,11 @@ namespace AdventOfCode.y2021.d04
             var builder = new StringBuilder();
             foreach (var (num, coords) in numbers)
             {
-                builder.AppendFormat("({0}, {1}) = {2}", coords.x, coords.y, num);
+                builder.AppendFormat("({0}, {1}) = {2,2} {3:Y;0;N}", 
+                    coords.x, 
+                    coords.y, 
+                    num, 
+                    gameBoard[coords.x, coords.y].GetHashCode());
                 builder.AppendLine();
             }
 
