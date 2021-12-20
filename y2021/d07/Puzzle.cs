@@ -11,7 +11,7 @@ namespace AdventOfCode.y2021.d07
 
         public Puzzle()
         {
-            input = File.ReadAllText(@"y2021\d07\test-input.puzzle")
+            input = File.ReadAllText(@"y2021\d07\input.puzzle")
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Select(int.Parse)
                 .ToList();
@@ -37,7 +37,22 @@ namespace AdventOfCode.y2021.d07
 
         public void Part2()
         {
-            throw new NotImplementedException();
+            int range = input.Max();
+
+            int fuel = Enumerable.Range(0, range)
+                .Select(pos => CalculateCost(pos))
+                .Min();
+
+            Console.WriteLine(fuel);
+
+            int CalculateCost(int position)
+            {
+                return input
+                    .Select(pos => CalculateFuel(Math.Abs(pos - position)))
+                    .Sum();
+            }
+
+            int CalculateFuel(int length) => (int)((length / 2d) * (1 + length));
         }
     }
 }
