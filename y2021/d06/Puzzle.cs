@@ -46,7 +46,65 @@ namespace AdventOfCode.y2021.d06
 
         public void Part2()
         {
-            
+            var fishes = input.GroupBy(i => i)
+                .Select(grp => new Fish(grp.Key, grp.Count()))
+                .ToList();
+
+            for (int i = 0; i < 256; i++)
+            {
+                long newFishCount = 0;
+
+                foreach (var fish in fishes)
+                {
+                    bool birthedFish = fish.IncrementDay(out var count);
+                    if (birthedFish)
+                    {
+                        newFishCount += count;
+                    }
+                }
+
+                if (newFishCount > 0)
+                {
+                    fishes.Add(new Fish(8, newFishCount));
+                }
+            }
+
+            long finalCount = 0;
+            foreach (var c in fishes.Select(f => f.Count))
+            {
+                finalCount += c;
+            }
+
+            Console.WriteLine(finalCount);
+        }
+    }
+
+    public class Fish
+    {
+        private int day;
+
+        public Fish(int startDay, long count)
+        {
+            this.day = startDay;
+            Count = count;
+        }
+
+        public long Count { get; }
+
+        public bool IncrementDay(out long count)
+        {
+            if (day == 0)
+            {
+                day = 6;
+                count = Count;
+                return true;
+            }
+            else
+            {
+                day--;
+                count = 0;
+                return false;
+            }
         }
     }
 }
